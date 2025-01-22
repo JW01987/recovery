@@ -1,4 +1,4 @@
 module.exports = {
-  //commentRouter: require("./comments"),
+  commentRouter: require("./comments"),
   postRouter: require("./posts"),
 };

@@ -14,7 +14,6 @@ router.get("/post", async (req, res) => {
 //--게시글 조회--//
 router.get("/post/:postId", async (req, res) => {
   const postId = Number(req.params.postId);
-  console.log(postId);
   try {
     const post = await Post.findOne({ postId });
     res.json({ post });
@@ -23,7 +22,7 @@ router.get("/post/:postId", async (req, res) => {
   }
 });
 //--게시글 수정--//
-router.post("/post/:postId", async (req, res) => {
+router.update("/post/:postId", async (req, res) => {
   const postId = Number(req.params.postId);
   const { content, pwd } = req.body;
   try {
@@ -39,7 +38,7 @@ router.post("/post/:postId", async (req, res) => {
   }
 });
 //--게시글 삭제--//]
-router.post("/post/delete/:postId", async (req, res) => {
+router.delete("/post/delete/:postId", async (req, res) => {
   const postId = Number(req.params.postId);
   const { pwd } = req.body;
 
