@@ -24,10 +24,10 @@ router.get("/post/:postId", async (req, res) => {
 //--게시글 수정--//
 router.post("/post/:postId", async (req, res) => {
   const postId = Number(req.params.postId);
-  const { content, pwd } = req.body;
+  const { content, password } = req.body;
   try {
     const postFind = await Post.findOne({ postId });
-    if (postFind.pwd == pwd) {
+    if (postFind.password == password) {
       const post = await Post.updateOne({ postId }, { $set: { content } });
       res.json({ msg: "게시글이 변경되었습니다" });
     } else {
@@ -40,11 +40,11 @@ router.post("/post/:postId", async (req, res) => {
 //--게시글 삭제--//]
 router.post("/post/delete/:postId", async (req, res) => {
   const postId = Number(req.params.postId);
-  const { pwd } = req.body;
+  const { password } = req.body;
 
   try {
     const postFind = await Post.findOne({ postId });
-    if (postFind.pwd == pwd) {
+    if (postFind.password == password) {
       const post = await Post.deleteOne({ postId });
       res.json({ msg: "게시글이 삭제되었습니다" });
     } else {
@@ -57,12 +57,12 @@ router.post("/post/delete/:postId", async (req, res) => {
 
 //--게시글 작성--//
 router.post("/post", async (req, res) => {
-  const { postId, writerName, pwd, content } = req.body;
+  const { postId, writerName, password, content } = req.body;
   try {
     const createdPost = await Post.create({
       postId,
       writerName,
-      pwd,
+      password,
       content,
     });
 

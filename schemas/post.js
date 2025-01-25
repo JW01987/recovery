@@ -14,7 +14,7 @@ const postSchema = new mongoose.Schema({
     type: String,
     default: new Date(Date.now()),
   },
-  pwd: {
+  password: {
     type: String,
     require: true,
   },
