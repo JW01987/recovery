@@ -22,7 +22,7 @@ router.get("/post/:postId", async (req, res) => {
   }
 });
 //--게시글 수정--//
-router.update("/post/:postId", async (req, res) => {
+router.post("/post/:postId", async (req, res) => {
   const postId = Number(req.params.postId);
   const { content, pwd } = req.body;
   try {
@@ -38,7 +38,7 @@ router.update("/post/:postId", async (req, res) => {
   }
 });
 //--게시글 삭제--//]
-router.delete("/post/delete/:postId", async (req, res) => {
+router.post("/post/delete/:postId", async (req, res) => {
   const postId = Number(req.params.postId);
   const { pwd } = req.body;
 

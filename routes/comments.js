@@ -13,7 +13,7 @@ router.get("/comment/:postId", async (req, res) => {
   }
 });
 //--댓글 수정--//
-router.update("/comment/:commentId", async (req, res) => {
+router.post("/comment/:commentId", async (req, res) => {
   const commentId = Number(req.params.commentId);
   const { content } = req.body;
   if (content.trim().length > 0) {
@@ -28,7 +28,7 @@ router.update("/comment/:commentId", async (req, res) => {
   }
 });
 //--댓글 삭제--//
-router.delete("/comment/delete/:commentId", async (req, res) => {
+router.post("/comment/delete/:commentId", async (req, res) => {
   const commentId = Number(req.params.commentId);
   try {
     await Comment.deleteOne({ commentId });
