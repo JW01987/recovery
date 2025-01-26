@@ -1,26 +1,25 @@
 const mongoose = require("mongoose");
+const {
+  Types: { ObjectId },
+} = mongoose.Schema;
 
 const postSchema = new mongoose.Schema({
-  postId: {
-    type: Number,
+  userId: {
+    type: ObjectId,
     required: true,
-    unique: true,
+    ref: "User",
   },
-  writerName: {
+  title: {
     type: String,
     required: true,
-  },
-  createdAt: {
-    type: String,
-    default: new Date(Date.now()),
-  },
-  password: {
-    type: String,
-    require: true,
   },
   content: {
     type: String,
     require: true,
+  },
+  createdAt: {
+    type: String,
+    default: new Date(Date.now()),
   },
 });
 

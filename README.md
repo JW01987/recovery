@@ -54,12 +54,12 @@
 | ---------------- | ------ | ------------------------------ |
 | 회원가입         | POST   | /api/register                  |
 | 로그인           | POST   | /api/login                     |
-| 게시글 모두 조회 | GET    | /api/post                      |
-| 게시글 조회      | GET    | /api/post/:postId              |
+| 게시글 모두 조회 | GET    | /api/postAll                   |
+| 게시글 조회      | GET    | /api/post                      |
 | 게시글 작성      | POST   | /api/post                      |
-| 게시글 수정      | UPDATE | /api/post/:postId              |
-| 게시글 삭제      | DELETE | /api/post/delete               |
-| 댓글 조회        | GET    | /api/comment/:postId           |
+| 게시글 수정      | UPDATE | /api/post/update/:postId       |
+| 게시글 삭제      | DELETE | /api/post/delete/:postId       |
+| 댓글 조회        | GET    | /api/comment                   |
 | 댓글 작성        | POST   | /api/comment                   |
-| 댓글 수정        | UPDATE | /api/comment/:commentId        |
+| 댓글 수정        | UPDATE | /api/comment/update/:commentId |
 | 댓글 삭제        | DELETE | /api/comment/delete/:commentId |
