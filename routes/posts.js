@@ -27,15 +27,15 @@ router.get("/post", authMiddleware, async (req, res) => {
   }
 });
 //--게시글 수정--//
-router.post("/post/update/:postId", async (req, res) => {
+router.post("/post/update/:postId", authMiddleware, async (req, res) => {
   const { id } = req.user;
   const { title, content } = req.body;
   const { postId } = req.params;
   try {
-    const postFind = await Post.findOne({ postId });
+    const postFind = await Post.findById(postId);
     if (postFind.userId == id) {
       const post = await Post.updateOne(
-        { postId },
+        { _id: postId },
         { $set: { title, content } }
       );
       res.json({ msg: "게시글이 변경되었습니다", post });
@@ -47,13 +47,13 @@ router.post("/post/update/:postId", async (req, res) => {
   }
 });
 //--게시글 삭제--//
-router.post("/post/delete/:postId", async (req, res) => {
+router.post("/post/delete/:postId", authMiddleware, async (req, res) => {
   const { postId } = req.params;
   const { id } = req.user;
   try {
-    const postFind = await Post.findOne({ postId });
-    if (postFind.id == id) {
-      await Post.deleteOne({ postId });
+    const postFind = await Post.findById(postId);
+    if (postFind.userId == id) {
+      await Post.deleteOne({ _id: postId });
       res.json({ msg: "게시글이 삭제되었습니다" });
     } else {
       res.json({ msg: "본인이 작성한 게시글만 삭제할 수 있습니다." });
