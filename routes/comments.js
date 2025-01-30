@@ -1,4 +1,4 @@
-const Comment = require("../schemas/comment");
+const { Comment } = require("../models");
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middlewares/auth");
@@ -7,7 +7,10 @@ const authMiddleware = require("../middlewares/auth");
 router.get("/comment", authMiddleware, async (req, res) => {
   try {
     const { id } = req.user;
-    const comments = await Comment.find({ userId: id }).sort({ createAt: -1 });
+    const comments = await Comment.findAll({
+      where: { userId: id },
+      order: [["createdAt", "DESC"]],
+    });
     res.json({ comments });
   } catch (err) {
     res.json({ msg: "오류가 발생했습니다.", err });
@@ -22,9 +25,9 @@ router.post("/comment/update/:commentId", authMiddleware, async (req, res) => {
   if (content.trim().length == 0)
     return res.json({ msg: "내용을 입력해주세요" });
   try {
-    const comment = await Comment.findById(commentId);
+    const comment = await Comment.findOne({ where: { id: commentId } });
     if (comment.userId == id) {
-      await Comment.updateOne({ _id: commentId }, { $set: { content } });
+      await Comment.update({ content }, { where: { id: commentId } });
       return res.json({ msg: "댓글이 업데이트 되었습니다" });
     }
     res.json({ msg: "작성자만 댓글을 수정할 수 있습니다" });
@@ -38,9 +41,9 @@ router.post("/comment/delete/:commentId", authMiddleware, async (req, res) => {
   const { commentId } = req.params;
   const { id } = req.user;
   try {
-    const comment = await Comment.findById(commentId);
+    const comment = await Comment.findOne({ where: { id: commentId } });
     if (comment.userId == id) {
-      await Comment.deleteOne({ _id: commentId });
+      await Comment.destroy({ where: { id: commentId } });
       return res.json({ msg: "댓글이 삭제되었습니다" });
     }
     res.json({ msg: "로그인 후 삭제할 수 있습니다" });

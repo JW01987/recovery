@@ -1,29 +1,31 @@
-const User = require("../schemas/user");
+const { User } = require("../models");
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
+require("dotenv").config();
 
 //- 회원가입 -//
 router.post("/register", async (req, res) => {
   try {
     const { password, nickname } = req.body;
-    const isExistUser = await User.find({ nickname });
-
-    if (isExistUser.length) {
-      return res.status(409).json({ msg: "이미 존재하는 닉네임입니다." });
-    }
     const isValidate = validateSignUp(nickname, password);
 
     if (isValidate.success) {
       //- 암호화-//
       const hashedPassword = await bcrypt.hash(password, 10);
-      await User.create({ nickname, password: hashedPassword });
 
-      return res.status(201).json({ msg: "회원가입이 완료되었습니다." });
-    }
-
-    return res.status(412).json({ msg: isValidate.msg });
+      //- 닉네임을 가진 유저가 있는지 확인하고 생성
+      const [user, created] = await User.findOrCreate({
+        where: { nickname },
+        defaults: {
+          password: hashedPassword,
+        },
+      });
+      if (created)
+        return res.status(201).json({ msg: "회원가입이 완료되었습니다." });
+      else return res.status(409).json({ msg: "이미 존재하는 닉네임입니다" });
+    } else return res.status(412).json({ msg: isValidate.msg });
   } catch (err) {
     return res.json({ err, msg: "오류가 발생했습니다" });
   }
@@ -33,7 +35,7 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { nickname, password } = req.body;
-    const user = await User.findOne({ nickname });
+    const user = await User.findOne({ where: { nickname } });
 
     if (!user)
       return res.status(401).json({ msg: "존재하지 않는 닉네임입니다." });
@@ -46,7 +48,7 @@ router.post("/login", async (req, res) => {
         userId: user.id,
       },
       //- 시크릿키 설정하기-//
-      "customized_secret_key"
+      process.env.DB_USER
     );
 
     res.cookie("authorization", `Bearer ${token}`);
@@ -83,7 +85,6 @@ function validateSignUp(nickname, password) {
 
   return {
     success: true,
-    msg: "회원가입이 성공적으로 완료되었습니다.",
   };
 }
 

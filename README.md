@@ -55,7 +55,7 @@
 | ---------------- | ------ | ------------------------------ |
 | 회원가입         | POST   | /api/register                  |
 | 로그인           | POST   | /api/login                     |
-| 게시글 모두 조회 | GET    | /api/postAll                   |
+| 게시글 모두 조회 | GET    | /api/postall                   |
 | 게시글 조회      | GET    | /api/post                      |
 | 게시글 작성      | POST   | /api/post                      |
 | 게시글 수정      | UPDATE | /api/post/update/:postId       |

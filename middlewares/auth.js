@@ -1,10 +1,10 @@
 const jwt = require("jsonwebtoken");
-const User = require("../schemas/user");
+const { User } = require("../models");
+require("dotenv").config();
 
 module.exports = async (req, res, next) => {
   try {
     const { authorization } = req.cookies;
-
     if (!authorization)
       return res
         .status(401)
@@ -18,9 +18,9 @@ module.exports = async (req, res, next) => {
         .send({ message: "토큰 타입이 일치하지 않습니다." });
 
     //-시크릿 키 설정하기-//
-    const decodedToken = jwt.verify(token, "customized_secret_key");
+    const decodedToken = jwt.verify(token, process.env.DB_USER);
     const userId = decodedToken.userId;
-    const user = await User.findOne({ _id: userId });
+    const user = await User.findOne({ where: { id: userId } });
 
     if (!user) {
       res.clearCookie("authorization");
