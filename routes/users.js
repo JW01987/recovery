@@ -1,4 +1,5 @@
-const { User } = require("../models");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -15,16 +16,18 @@ router.post("/register", async (req, res) => {
       //- 암호화-//
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      //- 닉네임을 가진 유저가 있는지 확인하고 생성
-      const [user, created] = await User.findOrCreate({
+      //- 닉네임을 가진 유저가 있는지 확인
+      const userFind = await prisma.user.findUnique({
         where: { nickname },
-        defaults: {
-          password: hashedPassword,
-        },
       });
-      if (created)
+
+      if (userFind === null) {
+        //- 생성 -//
+        await prisma.user.create({
+          data: { nickname, password: hashedPassword },
+        });
         return res.status(201).json({ msg: "회원가입이 완료되었습니다." });
-      else return res.status(409).json({ msg: "이미 존재하는 닉네임입니다" });
+      } else return res.status(409).json({ msg: "이미 존재하는 닉네임입니다" });
     } else return res.status(412).json({ msg: isValidate.msg });
   } catch (err) {
     return res.json({ err, msg: "오류가 발생했습니다" });
@@ -35,7 +38,7 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { nickname, password } = req.body;
-    const user = await User.findOne({ where: { nickname } });
+    const user = await prisma.user.findUnique({ where: { nickname } });
 
     if (!user)
       return res.status(401).json({ msg: "존재하지 않는 닉네임입니다." });
