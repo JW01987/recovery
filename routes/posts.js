@@ -1,40 +1,45 @@
-const { Post, User } = require("../models");
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middlewares/auth");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 //--게시글 전체 불러오기--//
 router.get("/postall", async (req, res) => {
   try {
-    const posts = await Post.findAll({
-      include: [
-        {
-          model: User,
-          as: "user",
-          attributes: ["userId"], //nickname 가져오기
+    const posts = await prisma.posts.findMany({
+      include: {
+        Users: {
+          select: {
+            nickname: true, //닉네임 가져오기
+          },
         },
-      ],
-      order: [["createdAt", "DESC"]],
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
-    res.json({ posts });
+    return res.json({ posts });
   } catch (err) {
-    res.json({ msg: "오류가 발생했습니다", err });
+    return res.json({ msg: "오류가 발생했습니다", err });
   }
 });
 //--게시글 조회 (로그인 한 사람의 게시글만)--//
 router.get("/post", authMiddleware, async (req, res) => {
   try {
     const { id } = req.user;
-    const posts = await Post.findAll({
+    const posts = await prisma.posts.findMany({
       where: { userId: id },
-      include: [
-        {
-          model: User,
-          as: "user",
-          attributes: ["nickname"],
+      include: {
+        Users: {
+          select: {
+            nickname: true,
+          },
         },
-      ],
-      order: [["createdAt", "DESC"]],
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
     res.json({ posts });
   } catch (err) {
@@ -48,28 +53,29 @@ router.post("/post/update/:postId", authMiddleware, async (req, res) => {
   const { title, content } = req.body;
   const { postId } = req.params;
   try {
-    const postFind = await Post.findOne({ where: { id: postId } });
+    const postFind = await prisma.posts.findUnique({ where: { id: +postId } });
     if (postFind.userId == id) {
-      const post = await Post.update(
-        { title, content },
-        { where: { id: postId } }
-      );
-      res.json({ msg: "게시글이 변경되었습니다" });
+      await prisma.posts.update({
+        where: { id: +postId },
+        data: { title, content },
+      });
+      return res.json({ msg: "게시글이 변경되었습니다" });
     } else {
-      res.json({ msg: "작성자만 수정할 수 있습니다" });
+      return res.json({ msg: "작성자만 수정할 수 있습니다" });
     }
   } catch (err) {
     res.json({ msg: "게시글이 존재하지 않습니다", err });
   }
 });
+
 //--게시글 삭제--//
 router.post("/post/delete/:postId", authMiddleware, async (req, res) => {
   const { postId } = req.params;
   const { id } = req.user;
   try {
-    const postFind = await Post.findOne({ where: { id: postId } });
+    const postFind = await prisma.posts.findUnique({ where: { id: +postId } });
     if (postFind.userId == id) {
-      await Post.destroy({ where: { id: postId } });
+      await prisma.posts.delete({ where: { id: +postId } });
       res.json({ msg: "게시글이 삭제되었습니다" });
     } else {
       res.json({ msg: "본인이 작성한 게시글만 삭제할 수 있습니다." });
@@ -83,11 +89,14 @@ router.post("/post/delete/:postId", authMiddleware, async (req, res) => {
 router.post("/post", authMiddleware, async (req, res) => {
   const { title, content } = req.body;
   const { id } = req.user;
+
   try {
-    const post = await Post.create({
-      userId: id,
-      title,
-      content,
+    const post = await prisma.posts.create({
+      data: {
+        userId: id,
+        title,
+        content,
+      },
     });
     res.json({ post, msg: "게시글이 등록되었습니다" });
   } catch (err) {

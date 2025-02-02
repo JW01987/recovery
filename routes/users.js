@@ -15,15 +15,13 @@ router.post("/register", async (req, res) => {
     if (isValidate.success) {
       //- 암호화-//
       const hashedPassword = await bcrypt.hash(password, 10);
-
       //- 닉네임을 가진 유저가 있는지 확인
-      const userFind = await prisma.user.findUnique({
+      const userFind = await prisma.users.findUnique({
         where: { nickname },
       });
-
       if (userFind === null) {
         //- 생성 -//
-        await prisma.user.create({
+        await prisma.users.create({
           data: { nickname, password: hashedPassword },
         });
         return res.status(201).json({ msg: "회원가입이 완료되었습니다." });
@@ -38,7 +36,7 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { nickname, password } = req.body;
-    const user = await prisma.user.findUnique({ where: { nickname } });
+    const user = await prisma.users.findUnique({ where: { nickname } });
 
     if (!user)
       return res.status(401).json({ msg: "존재하지 않는 닉네임입니다." });

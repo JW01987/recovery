@@ -1,15 +1,16 @@
-const { Comment } = require("../models");
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middlewares/auth");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 //--댓글 목록 조회 (본인이 작성한 댓글 목록)--//
 router.get("/comment", authMiddleware, async (req, res) => {
   try {
     const { id } = req.user;
-    const comments = await Comment.findAll({
+    const comments = await prisma.comments.findMany({
       where: { userId: id },
-      order: [["createdAt", "DESC"]],
+      orderBy: { createdAt: "desc" },
     });
     res.json({ comments });
   } catch (err) {
@@ -25,9 +26,14 @@ router.post("/comment/update/:commentId", authMiddleware, async (req, res) => {
   if (content.trim().length == 0)
     return res.json({ msg: "내용을 입력해주세요" });
   try {
-    const comment = await Comment.findOne({ where: { id: commentId } });
+    const comment = await prisma.comments.findUnique({
+      where: { id: +commentId },
+    });
     if (comment.userId == id) {
-      await Comment.update({ content }, { where: { id: commentId } });
+      await prisma.comments.update({
+        where: { id: +commentId },
+        data: { content },
+      });
       return res.json({ msg: "댓글이 업데이트 되었습니다" });
     }
     res.json({ msg: "작성자만 댓글을 수정할 수 있습니다" });
@@ -41,9 +47,11 @@ router.post("/comment/delete/:commentId", authMiddleware, async (req, res) => {
   const { commentId } = req.params;
   const { id } = req.user;
   try {
-    const comment = await Comment.findOne({ where: { id: commentId } });
+    const comment = await prisma.comments.findUnique({
+      where: { id: +commentId },
+    });
     if (comment.userId == id) {
-      await Comment.destroy({ where: { id: commentId } });
+      await prisma.comments.delete({ where: { id: +commentId } });
       return res.json({ msg: "댓글이 삭제되었습니다" });
     }
     res.json({ msg: "로그인 후 삭제할 수 있습니다" });
@@ -59,10 +67,12 @@ router.post("/comment", authMiddleware, async (req, res) => {
   if (content.trim().length == 0)
     return res.json({ msg: "내용을 입력해주세요" });
   try {
-    const comment = await Comment.create({
-      content,
-      postId,
-      userId: id,
+    const comment = await prisma.comments.create({
+      data: {
+        content,
+        postId: +postId,
+        userId: id,
+      },
     });
     res.json({ comment, msg: "댓글 작성이 완료되었습니다" });
   } catch (err) {

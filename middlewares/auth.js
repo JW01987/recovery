@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
-const { User } = require("../models");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 require("dotenv").config();
 
 module.exports = async (req, res, next) => {
@@ -20,7 +21,7 @@ module.exports = async (req, res, next) => {
     //-시크릿 키 설정하기-//
     const decodedToken = jwt.verify(token, process.env.DB_USER);
     const userId = decodedToken.userId;
-    const user = await User.findOne({ where: { id: userId } });
+    const user = await prisma.users.findUnique({ where: { id: userId } });
 
     if (!user) {
       res.clearCookie("authorization");
