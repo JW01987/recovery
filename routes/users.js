@@ -10,6 +10,7 @@ require("dotenv").config();
 router.post("/register", async (req, res) => {
   try {
     const { password, nickname } = req.body;
+
     const isValidate = validateSignUp(nickname, password);
 
     if (isValidate.success) {
