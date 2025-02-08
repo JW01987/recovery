@@ -57,5 +57,7 @@ model Likes{
 
   Users     Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   Posts     Posts    @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
 }
 

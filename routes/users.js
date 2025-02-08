@@ -50,7 +50,7 @@ router.post("/login", async (req, res) => {
         userId: user.id,
       },
       //- 시크릿키 설정하기-//
-      process.env.DB_USER
+      process.env.KEY_USER
     );
 
     res.cookie("authorization", `Bearer ${token}`);

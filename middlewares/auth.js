@@ -19,7 +19,7 @@ module.exports = async (req, res, next) => {
         .send({ message: "토큰 타입이 일치하지 않습니다." });
 
     //-시크릿 키 설정하기-//
-    const decodedToken = jwt.verify(token, process.env.DB_USER);
+    const decodedToken = jwt.verify(token, process.env.KEY_USER);
     const userId = decodedToken.userId;
     const user = await prisma.users.findUnique({ where: { id: userId } });
 

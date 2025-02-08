@@ -1,4 +1,3 @@
-// const connect = require("./schemas");
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const app = express();
