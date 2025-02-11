@@ -1,36 +1,41 @@
 const express = require("express");
 const router = express.Router();
-const authMiddleware = require("../middlewares/auth");
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const PostsController = require("../controllers/posts.controller");
+const postsController = new PostsController();
+
+router.get("/postall", postsController.getPostAll);
+router.get("/post", authMiddleware, postsController.getPosts);
+router.post("/post/update/:postId", authMiddleware, postsController.updatePost);
+router.post("/post/delete/:postId", authMiddleware, postsController.deletePost);
+router.post("/post", authMiddleware, postsController.createPost);
 
 //--게시글 전체 불러오기--// + 좋아요 갯수
-router.get("/postall", async (req, res) => {
-  try {
-    const posts = await prisma.posts.findMany({
-      include: {
-        Users: {
-          select: {
-            nickname: true, //닉네임 가져오기
-          },
-        },
-        _count: {
-          select: {
-            Likes: {
-              where: { like: true }, // 좋아요가 true인 개수만 세기
-            },
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-    return res.json({ posts });
-  } catch (err) {
-    return res.json({ msg: "오류가 발생했습니다", err });
-  }
-});
+// router.get("/postall", async (req, res) => {
+//   try {
+//     const posts = await prisma.posts.findMany({
+//       include: {
+//         Users: {
+//           select: {
+//             nickname: true, //닉네임 가져오기
+//           },
+//         },
+//         _count: {
+//           select: {
+//             Likes: {
+//               where: { like: true }, // 좋아요가 true인 개수만 세기
+//             },
+//           },
+//         },
+//       },
+//       orderBy: {
+//         createdAt: "desc",
+//       },
+//     });
+//     return res.json({ posts });
+//   } catch (err) {
+//     return res.json({ msg: "오류가 발생했습니다", err });
+//   }
+// });
 //--게시글 조회 (로그인 한 사람의 게시글만)--//+ 좋아요 갯수
 router.get("/post", authMiddleware, async (req, res) => {
   try {
