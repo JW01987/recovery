@@ -31,7 +31,7 @@ class PostRepository {
     }
   };
 
-  getPosts = async ({ userId }) => {
+  getUserPosts = async ({ userId }) => {
     try {
       const posts = await prisma.posts.findMany({
         where: { userId },
@@ -59,36 +59,28 @@ class PostRepository {
       throw new Error(error.message || "레포지토리에서 에러 발생");
     }
   };
-  updatePost = async ({ userId, title, content, postId }) => {
+
+  findUniquePost = async (id) => {
+    return await prisma.posts.findUnique({
+      where: { id },
+    });
+  };
+  updatePost = async ({ title, content, postId }) => {
     try {
-      const postFind = await prisma.posts.findUnique({
+      await prisma.posts.update({
         where: { id: postId },
+        data: { title, content },
       });
-      if (postFind.userId == userId) {
-        await prisma.posts.update({
-          where: { id: postId },
-          data: { title, content },
-        });
-        return "게시글이 변경되었습니다";
-      } else {
-        throw new Error("작성자만 게시글을 수정할 수 있습니다");
-      }
+      return "게시글이 변경되었습니다";
     } catch (error) {
       console.log("[Repository] 게시글 수정 실패");
       throw new Error(error.message || "레포지토리에서 에러 발생");
     }
   };
-  deletePost = async ({ postId, userId }) => {
+  deletePost = async ({ postId }) => {
     try {
-      const postFind = await prisma.posts.findUnique({
-        where: { id: postId },
-      });
-      if (postFind.userId == userId) {
-        await prisma.posts.delete({ where: { id: postId } });
-        return "게시글이 삭제되었습니다";
-      } else {
-        throw new Error("작성자만 게시글을 삭제할 수 있습니다");
-      }
+      await prisma.posts.delete({ where: { id: postId } });
+      return "게시글이 삭제되었습니다";
     } catch (error) {
       console.log("[Repository] 게시글 삭제 실패");
       throw new Error(error.message || "레포지토리에서 에러 발생");

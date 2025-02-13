@@ -1,4 +1,3 @@
-const { use } = require("../routes/comments.routes");
 const PostService = require("../services/posts.service");
 
 class PostsController {
