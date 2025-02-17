@@ -102,6 +102,36 @@ class PostRepository {
       throw new Error(error.message || "레포지토리에서 에러 발생");
     }
   };
+
+  findManyByLike = async (userId) => {
+    try {
+      return await prisma.posts.findMany({
+        where: {
+          Likes: {
+            some: {
+              userId, // 특정 유저가 좋아요를 누른 게시글만
+              like: true, // 좋아요가 true인 게시글만
+            },
+          },
+        },
+        include: {
+          Users: {
+            select: { nickname: true }, // 작성자의 닉네임
+          },
+          _count: {
+            select: {
+              Likes: {
+                where: { like: true }, // 좋아요가 true인 경우만 카운트
+              },
+            },
+          },
+        },
+      });
+    } catch (error) {
+      console.log("[Repository] 게시글 조회 실패");
+      throw new Error(error.message || "레포지토리에서 에러 발생");
+    }
+  };
 }
 
 module.exports = PostRepository;

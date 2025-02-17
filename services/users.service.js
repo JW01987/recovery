@@ -2,7 +2,7 @@ const UserRepository = require("../repositories/users.repository");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-class UserServices {
+class UserService {
   userRepository = new UserRepository();
 
   register = async ({ password, nickname }) => {
@@ -78,4 +78,4 @@ class UserServices {
   };
 }
 
-module.exports = UserServices;
+module.exports = UserService;

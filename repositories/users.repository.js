@@ -1,10 +1,3 @@
-const userFind = await prisma.users.findUnique({
-  where: { nickname },
-});
-await prisma.users.create({
-  data: { nickname, password: hashedPassword },
-});
-
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
