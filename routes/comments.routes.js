@@ -1,9 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middlewares/auth");
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const CommentsController = require("../controllers/comments.controller");
+const commentsController = new CommentsController();
 
+router.get("/comment", authMiddleware, commentsController.commentList);
+router.patch(
+  "/comment/:commentId",
+  authMiddleware,
+  commentsController.commentUpdate
+);
+router.delete(
+  "/comment/:commentId",
+  authMiddleware,
+  commentsController.commentDelete
+);
+router.post("/comment", authMiddleware, commentsController.commentCreate);
 //--댓글 목록 조회 (본인이 작성한 댓글 목록)--//
 router.get("/comment", authMiddleware, async (req, res) => {
   try {
@@ -19,7 +31,7 @@ router.get("/comment", authMiddleware, async (req, res) => {
 });
 
 //--댓글 수정--//
-router.post("/comment/update/:commentId", authMiddleware, async (req, res) => {
+router.patch("/comment/update/:commentId", authMiddleware, async (req, res) => {
   const { commentId } = req.params;
   const { content } = req.body;
   const { id } = req.user;
@@ -43,22 +55,26 @@ router.post("/comment/update/:commentId", authMiddleware, async (req, res) => {
 });
 
 //--댓글 삭제--//
-router.post("/comment/delete/:commentId", authMiddleware, async (req, res) => {
-  const { commentId } = req.params;
-  const { id } = req.user;
-  try {
-    const comment = await prisma.comments.findUnique({
-      where: { id: +commentId },
-    });
-    if (comment.userId == id) {
-      await prisma.comments.delete({ where: { id: +commentId } });
-      return res.json({ msg: "댓글이 삭제되었습니다" });
+router.delete(
+  "/comment/delete/:commentId",
+  authMiddleware,
+  async (req, res) => {
+    const { commentId } = req.params;
+    const { id } = req.user;
+    try {
+      const comment = await prisma.comments.findUnique({
+        where: { id: +commentId },
+      });
+      if (comment.userId == id) {
+        await prisma.comments.delete({ where: { id: +commentId } });
+        return res.json({ msg: "댓글이 삭제되었습니다" });
+      }
+      res.json({ msg: "로그인 후 삭제할 수 있습니다" });
+    } catch (err) {
+      res.json({ msg: "오류가 발생했습니다", err });
     }
-    res.json({ msg: "로그인 후 삭제할 수 있습니다" });
-  } catch (err) {
-    res.json({ msg: "오류가 발생했습니다", err });
   }
-});
+);
 
 //--댓글 작성--//
 router.post("/comment", authMiddleware, async (req, res) => {

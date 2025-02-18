@@ -18,8 +18,7 @@ class LikesRepository {
 
   create = async ({ userId, postId }) => {
     try {
-      await prisma.likes.create({ data: { userId, postId } });
-      return "좋아요를 눌렀습니다";
+      return await prisma.likes.create({ data: { userId, postId } });
     } catch (error) {
       console.log("[Repository] 좋아요 생성 실패");
       throw new Error(error.message || "레포지토리에서 에러 발생");
@@ -28,11 +27,10 @@ class LikesRepository {
 
   update = async (userId, postId, isLike) => {
     try {
-      await prisma.likes.update({
+      return await prisma.likes.update({
         where: { userId_postId: { userId, postId } },
         data: { like: isLike },
       });
-      //return
     } catch (error) {
       console.log("[Repository] 좋아요 생성 실패");
       throw new Error(error.message || "레포지토리에서 에러 발생");

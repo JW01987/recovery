@@ -15,7 +15,7 @@ class UserRepository {
 
   createUser = async ({ nickname, hashedPassword }) => {
     try {
-      await prisma.users.create({
+      return await prisma.users.create({
         data: { nickname, password: hashedPassword },
       });
     } catch (error) {

@@ -4,6 +4,6 @@ const UsersController = require("../controllers/users.controller");
 const usersController = new UsersController();
 
 router.get("/register", usersController.register);
-router.get("/login", usersController.login);
+router.patch("/login", usersController.login);
 
 module.exports = router;
