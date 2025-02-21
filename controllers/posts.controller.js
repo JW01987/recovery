@@ -30,14 +30,15 @@ class PostsController {
       const { title, content } = req.body;
       const postId = Number(req.params.postId);
 
-      const message = await this.postService.updatePost({
+      const { success } = await this.postService.updatePost({
         userId,
         title,
         content,
         postId,
       });
-
-      res.status(200).json({ message });
+      if (success) {
+        return res.status(200).json({ message: "게시글 수정성공" });
+      }
     } catch (error) {
       console.error("[Controller] 게시글 수정 실패:", error);
       res.status(500).json({ message: error.message, success: false });
@@ -48,9 +49,11 @@ class PostsController {
       const postId = Number(req.params.postId);
       const userId = req.user.id;
 
-      const message = await this.postService.deletePost({ postId, userId });
+      const { success } = await this.postService.deletePost({ postId, userId });
 
-      res.status(200).json({ message });
+      if (success) {
+        return res.status(200).json({ message: "게시글 삭제 성공" });
+      }
     } catch (error) {
       console.error("[Controller] 게시글 삭제 실패:", error);
       res.status(500).json({ message: error.message, success: false });
@@ -61,13 +64,15 @@ class PostsController {
       const { title, content } = req.body;
       const userId = req.user.id;
 
-      const message = await this.postService.createPost({
+      const { success } = await this.postService.createPost({
         title,
         content,
         userId,
       });
 
-      res.status(200).json({ message });
+      if (success) {
+        return res.status(200).json({ message: "게시글 등록 성공" });
+      }
     } catch (error) {
       console.error("[Controller] 게시글 등록 실패:", error);
       res.status(500).json({ message: error.message, success: false });

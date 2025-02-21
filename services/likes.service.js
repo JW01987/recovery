@@ -15,15 +15,22 @@ class LikesService {
       });
 
       if (postLike === null) {
-        return await this.likesRepository.create({ userId, postId });
+        const result = await this.likesRepository.create({ userId, postId });
+        if (result) {
+          return { like: true };
+        }
       } else if (postLike.like === false) {
         //좋아요가 있으나 false인 경우
-        await this.likesRepository.update(userId, postId, true);
-        return "좋아요를 눌렀습니다";
+        const result = await this.likesRepository.update(userId, postId, true);
+        if (result) {
+          return { like: true };
+        }
       } else {
         //좋아요가 있으나 true인 경우
-        await this.likesRepository.update(userId, postId, false);
-        return "좋아요를 취소했습니다";
+        const result = await this.likesRepository.update(userId, postId, false);
+        if (result) {
+          return { like: false };
+        }
       }
     } catch (error) {
       console.log("[Service] 좋아요 실패");

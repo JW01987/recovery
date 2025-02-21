@@ -36,12 +36,14 @@ class PostService {
       const postFind = await this.postRepository.findUniquePost(userId);
 
       if (postFind.userId == userId) {
-        await this.postRepository.updatePost({
+        const result = await this.postRepository.updatePost({
           title,
           content,
           postId,
         });
-        return "게시글이 변경되었습니다";
+        if (result) {
+          return { success: true };
+        }
       } else {
         throw new Error("작성자만 게시글을 수정할 수 있습니다");
       }
@@ -55,10 +57,12 @@ class PostService {
       const postFind = await this.postRepository.findUniquePost(userId);
 
       if (postFind.userId == userId) {
-        await this.postRepository.deletePost({
+        const result = await this.postRepository.deletePost({
           postId,
         });
-        return "게시글이 삭제되었습니다";
+        if (result) {
+          return { success: true };
+        }
       } else {
         throw new Error("작성자만 게시글을 삭제할 수 있습니다");
       }
@@ -69,13 +73,15 @@ class PostService {
   };
   createPost = async ({ title, content, userId }) => {
     try {
-      await this.postRepository.createPost({
+      const result = await this.postRepository.createPost({
         title,
         content,
         userId,
       });
 
-      return "게시글을 작성하였습니다";
+      if (result) {
+        return { success: true };
+      }
     } catch (error) {
       console.log("[Service] 게시글 등록 실패");
       throw new Error(error.message || "서비스에서 에러 발생");
