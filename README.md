@@ -14,8 +14,10 @@
 
 4. Lv.4 게시글에 좋아요 기능을 추가하기 ✅
 
-5. Lv.5 프로젝트에 Layered Architecture Pattern 적용하기
+5. Lv.5 프로젝트에 Layered Architecture Pattern 적용하기 ✅
+
+6. Lv.6 NestJS 마이그레이션 하기
 
 ## 🔎 사용하는 기술
 
-`JavaScript` `mongoDB` `mongoose` `mySQL` `sequelize` `Prisma`
+`JavaScript` `mongoDB` `mongoose` `mySQL` `sequelize` `Prisma` `NestJS`
