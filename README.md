@@ -41,7 +41,8 @@
 ├── app.js
 │
 ├── 🗂️ middlewares
-│ └── auth.js
+│ ├── auth.js
+│ └── errorHandler.js
 │
 ├── 🗂️ prisma
 │ ├── 📂 migrations
@@ -73,6 +74,9 @@
 │ ├── posts.routes.js
 │ ├── users.routes.js
 │ └── index.js
+│
+├── 🗂️ utils
+│ └── error.js
 │
 ├── README.md
 ├── .gitignore
