@@ -9,7 +9,7 @@ class PostsController {
       res.status(200).json({ data: posts });
     } catch (error) {
       console.error("[Controller] 게시글 조회 실패:", error);
-      res.status(500).json({ message: error.message, success: false });
+      next(error);
     }
   };
 
@@ -20,7 +20,7 @@ class PostsController {
       res.status(200).json({ data: userPost });
     } catch (error) {
       console.error("[Controller] 게시글 조회 실패:", error);
-      res.status(500).json({ message: error.message, success: false });
+      next(error);
     }
   };
 
@@ -41,7 +41,7 @@ class PostsController {
       }
     } catch (error) {
       console.error("[Controller] 게시글 수정 실패:", error);
-      res.status(500).json({ message: error.message, success: false });
+      next(error);
     }
   };
   deletePost = async (req, res, next) => {
@@ -56,7 +56,7 @@ class PostsController {
       }
     } catch (error) {
       console.error("[Controller] 게시글 삭제 실패:", error);
-      res.status(500).json({ message: error.message, success: false });
+      next(error);
     }
   };
   createPost = async (req, res, next) => {
@@ -75,7 +75,7 @@ class PostsController {
       }
     } catch (error) {
       console.error("[Controller] 게시글 등록 실패:", error);
-      res.status(500).json({ message: error.message, success: false });
+      next(error);
     }
   };
 }

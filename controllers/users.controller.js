@@ -16,7 +16,7 @@ class UsersController {
       return res.status(200).json({ message: "회원가입 실패" });
     } catch (error) {
       console.error("[Controller] 회원가입 실패:", error);
-      res.status(500).json({ message: error.message, success: false });
+      next(error);
     }
   };
 
@@ -34,7 +34,7 @@ class UsersController {
       return res.status(200).json({ message: "로그인 실패" });
     } catch (error) {
       console.error("[Controller] 로그인 실패:", error);
-      res.status(500).json({ message: error.message, success: false });
+      next(error);
     }
   };
 }

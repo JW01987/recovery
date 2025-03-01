@@ -10,7 +10,7 @@ class CommentsController {
       res.status(200).json({ result });
     } catch (error) {
       console.error("[Controller] 댓글 불러오기 실패:", error);
-      res.status(500).json({ message: error.message, success: false });
+      next(error);
     }
   };
   commentUpdate = async (req, res, next) => {
@@ -28,7 +28,7 @@ class CommentsController {
       }
     } catch (error) {
       console.error("[Controller] 댓글 수정 실패:", error);
-      res.status(500).json({ message: error.message, success: false });
+      next(error);
     }
   };
   commentDelete = async (req, res, next) => {
@@ -45,7 +45,7 @@ class CommentsController {
       }
     } catch (error) {
       console.error("[Controller] 댓글 삭제 실패:", error);
-      res.status(500).json({ message: error.message, success: false });
+      next(error);
     }
   };
   commentCreate = async (req, res, next) => {
@@ -63,7 +63,7 @@ class CommentsController {
       }
     } catch (error) {
       console.error("[Controller] 댓글 작성 실패:", error);
-      res.status(500).json({ message: error.message, success: false });
+      next(error);
     }
   };
 }

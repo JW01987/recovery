@@ -8,10 +8,12 @@ const {
   userRouter,
   likeRouter,
 } = require("./routes");
+const errorHandler = require("./middlewares/errorHandler");
 
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api", [postRouter, commentRouter, userRouter, likeRouter]);
+app.use(errorHandler);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

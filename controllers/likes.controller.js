@@ -15,7 +15,7 @@ class LikesController {
       }
     } catch (error) {
       console.error("[Controller] 좋아요 등록 실패:", error);
-      res.status(500).json({ message: error.message, success: false });
+      next(error);
     }
   };
 
@@ -26,7 +26,7 @@ class LikesController {
       res.status(200).json({ result });
     } catch (error) {
       console.error("[Controller] 로그인 실패:", error);
-      res.status(500).json({ message: error.message, success: false });
+      next(error);
     }
   };
 }
