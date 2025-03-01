@@ -79,3 +79,10 @@
 ```
 
 ### 트러블 슈팅
+
+nest g mo users 오류
+Error: Cannot read properties of undefined (reading 'text')
+https://github.com/nestjs/nest/issues/13820
+
+npm uninstall @nestjs/schematics --save-dev
+npm install @nestjs/schematics --save-dev
