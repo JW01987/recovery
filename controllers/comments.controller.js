@@ -1,6 +1,6 @@
 const CommentService = require("../services/comments.service");
 
-class CommentsController {
+export class CommentsController {
   commentService = new CommentService();
 
   commentList = async (req, res, next) => {
@@ -67,5 +67,3 @@ class CommentsController {
     }
   };
 }
-
-module.exports = CommentsController;

@@ -1,9 +1,0 @@
-const express = require("express");
-const router = express.Router();
-const UsersController = require("../controllers/users.controller");
-const usersController = new UsersController();
-
-router.get("/register", usersController.register);
-router.patch("/login", usersController.login);
-
-module.exports = router;

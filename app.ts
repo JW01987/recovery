@@ -1,21 +1,21 @@
-const express = require("express");
-const cookieParser = require("cookie-parser");
-const app = express();
-const port = 3000;
-const {
+import cookieParser from "cookie-parser";
+import express, { Request, Response } from "express"; // 타입 추가
+import {
   postRouter,
   commentRouter,
   userRouter,
   likeRouter,
-} = require("./routes");
-const errorHandler = require("./middlewares/errorHandler");
+} from "./routes/index";
+import { errorHandler } from "./middlewares/errorHandler";
+const app = express();
+const port = 3000;
 
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api", [postRouter, commentRouter, userRouter, likeRouter]);
 app.use(errorHandler);
 
-app.get("/", (req, res) => {
+app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
