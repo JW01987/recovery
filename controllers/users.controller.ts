@@ -1,9 +1,11 @@
+import { Request, Response, NextFunction } from "express";
+import { AuthRequest } from "../utils/authRequest";
 const UserService = require("../services/users.service");
 
 class UsersController {
   userService = new UserService();
 
-  register = async (req, res, next) => {
+  register = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { password, nickname } = req.body;
       const { success } = await this.userService.register({
@@ -20,7 +22,7 @@ class UsersController {
     }
   };
 
-  login = async (req, res, next) => {
+  login = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
       const { nickname, password } = req.body;
       const { success, token } = await this.userService.login({

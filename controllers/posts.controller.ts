@@ -1,9 +1,11 @@
+import { Response, NextFunction } from "express";
+import { AuthRequest } from "../utils/authRequest";
 const PostService = require("../services/posts.service");
 
 class PostsController {
   postService = new PostService(); // Post 서비스를 클래스를 컨트롤러 클래스의 멤버 변수로 할당
 
-  getPostAll = async (req, res, next) => {
+  getPostAll = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
       const posts = await this.postService.getPostAll();
       res.status(200).json({ data: posts });
@@ -13,8 +15,9 @@ class PostsController {
     }
   };
 
-  getPosts = async (req, res, next) => {
+  getPosts = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
+      if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const userId = req.user.id;
       const userPost = await this.postService.getPosts(userId);
       res.status(200).json({ data: userPost });
@@ -24,8 +27,9 @@ class PostsController {
     }
   };
 
-  updatePost = async (req, res, next) => {
+  updatePost = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
+      if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const userId = req.user.id;
       const { title, content } = req.body;
       const postId = Number(req.params.postId);
@@ -44,8 +48,9 @@ class PostsController {
       next(error);
     }
   };
-  deletePost = async (req, res, next) => {
+  deletePost = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
+      if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const postId = Number(req.params.postId);
       const userId = req.user.id;
 
@@ -59,8 +64,9 @@ class PostsController {
       next(error);
     }
   };
-  createPost = async (req, res, next) => {
+  createPost = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
+      if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const { title, content } = req.body;
       const userId = req.user.id;
 

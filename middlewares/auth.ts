@@ -1,11 +1,12 @@
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
-import { Request, Response, NextFunction, RequestHandler } from "express";
+import { Response, NextFunction, RequestHandler } from "express";
+import { AuthRequest } from "../utils/authRequest";
 const prisma = new PrismaClient();
 require("dotenv").config();
 
 export const authMiddleware: RequestHandler = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -36,7 +37,7 @@ export const authMiddleware: RequestHandler = async (
       return;
     }
 
-    (req as any).user = user;
+    req.user = user;
     next();
   } catch (err) {
     res.clearCookie("authorization");

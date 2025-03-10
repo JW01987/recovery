@@ -1,10 +1,13 @@
+import { Response, NextFunction } from "express";
+import { AuthRequest } from "../utils/authRequest";
 const CommentService = require("../services/comments.service");
 
 export class CommentsController {
   commentService = new CommentService();
 
-  commentList = async (req, res, next) => {
+  commentList = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
+      if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const userId = req.user.id;
       const result = await this.commentService.getList(userId);
       res.status(200).json({ result });
@@ -13,8 +16,13 @@ export class CommentsController {
       next(error);
     }
   };
-  commentUpdate = async (req, res, next) => {
+  commentUpdate = async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
+      if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const { commentId } = req.params;
       const { content } = req.body;
       const userId = req.user.id;
@@ -31,8 +39,13 @@ export class CommentsController {
       next(error);
     }
   };
-  commentDelete = async (req, res, next) => {
+  commentDelete = async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
+      if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const { commentId } = req.params;
       const userId = req.user.id;
 
@@ -48,8 +61,13 @@ export class CommentsController {
       next(error);
     }
   };
-  commentCreate = async (req, res, next) => {
+  commentCreate = async (
+    req: AuthRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
+      if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const { content, postId } = req.body;
       const userId = req.user.id;
 

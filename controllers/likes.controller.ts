@@ -1,10 +1,13 @@
+import { Response, NextFunction } from "express";
+import { AuthRequest } from "../utils/authRequest";
 const LikesService = require("../services/likes.service");
 
 class LikesController {
   likeService = new LikesService();
 
-  like = async (req, res, next) => {
+  like = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
+      if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const userId = req.user.id;
       const postId = Number(req.params.postId);
       const { like } = await this.likeService.like({ userId, postId });
@@ -19,8 +22,9 @@ class LikesController {
     }
   };
 
-  likeGet = async (req, res, next) => {
+  likeGet = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
+      if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const userId = req.user.id;
       const { result } = await this.likeService.likeGet(userId);
       res.status(200).json({ result });
