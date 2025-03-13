@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../utils/authRequest";
 import { LikesService } from "../services/likes.service";
-
+import { Users } from "@prisma/client";
 export class LikesController {
   likeService = new LikesService();
 
@@ -10,7 +10,7 @@ export class LikesController {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const userId = req.user.id;
       const postId = Number(req.params.postId);
-      const { like } = await this.likeService.like({ userId, postId });
+      const like: boolean = await this.likeService.like({ userId, postId });
       if (like) {
         res.status(200).json({ message: "좋아요를 등록했습니다" });
       } else {

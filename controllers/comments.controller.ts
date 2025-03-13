@@ -71,7 +71,7 @@ export class CommentsController {
       const { content, postId } = req.body;
       const userId = req.user.id;
 
-      const { success } = await this.commentService.commentCreate({
+      const success = await this.commentService.commentCreate({
         content,
         postId,
         userId,

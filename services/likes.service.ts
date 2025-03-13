@@ -6,7 +6,7 @@ export class LikesService {
   likesRepository = new LikesRepository();
   postsRepository = new PostsRepository();
 
-  like = async ({ userId, postId }) => {
+  like = async ({ userId, postId }: { userId: number; postId: number }) => {
     const postLike = await this.likesRepository.findFirst({
       where: {
         userId,
@@ -15,25 +15,19 @@ export class LikesService {
     });
 
     if (postLike === null) {
-      const result = await this.likesRepository.create({ userId, postId });
-      if (result) {
-        return { like: true };
-      }
+      await this.likesRepository.create({ userId, postId });
+      return true;
     } else if (postLike.like === false) {
       //좋아요가 있으나 false인 경우
-      const result = await this.likesRepository.update(userId, postId, true);
-      if (result) {
-        return { like: true };
-      }
+      await this.likesRepository.update(userId, postId, true);
+      return true;
     } else {
       //좋아요가 있으나 true인 경우
-      const result = await this.likesRepository.update(userId, postId, false);
-      if (result) {
-        return { like: false };
-      }
+      await this.likesRepository.update(userId, postId, false);
+      return false;
     }
   };
-  likeGet = async (userId) => {
+  likeGet = async (userId: number) => {
     const posts = await this.postsRepository.findManyByLike(userId);
     if (!posts) return { result: "좋아요한 게시글이 없습니다" };
     const result = posts.sort((a, b) => b._count.Likes - a._count.Likes);

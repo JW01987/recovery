@@ -26,14 +26,11 @@ export class PostService {
     const postFind = await this.postRepository.findUniquePost(userId);
 
     if (postFind.userId == userId) {
-      const result = await this.postRepository.updatePost({
+      await this.postRepository.updatePost({
         title,
         content,
         postId,
       });
-      if (result) {
-        return { success: true };
-      }
     } else {
       throw new AppError("작성자만 게시글을 수정할 수 있습니다", 401);
     }
@@ -42,26 +39,19 @@ export class PostService {
     const postFind = await this.postRepository.findUniquePost(userId);
 
     if (postFind.userId == userId) {
-      const result = await this.postRepository.deletePost({
+      await this.postRepository.deletePost({
         postId,
       });
-      if (result) {
-        return { success: true };
-      }
     } else {
       throw new AppError("작성자만 게시글을 삭제할 수 있습니다", 401);
     }
   };
   createPost = async ({ title, content, userId }) => {
-    const result = await this.postRepository.createPost({
+    await this.postRepository.createPost({
       title,
       content,
       userId,
     });
-
-    if (result) {
-      return { success: true };
-    }
   };
 }
 

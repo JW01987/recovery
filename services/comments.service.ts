@@ -41,14 +41,13 @@ export class CommentService {
     if (content.trim().length == 0)
       throw new AppError("내용을 입력해주세요", 400);
 
-    const result = await this.commentRepository.create({
+    await this.commentRepository.create({
       content,
       postId,
       userId,
     });
-    if (result) {
-      return { success: true };
-    }
+
+    return true;
   };
 }
 module.exports = CommentService;
