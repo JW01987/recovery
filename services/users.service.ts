@@ -1,9 +1,10 @@
-const UserRepository = require("../repositories/users.repository");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+import { UserRepository } from "../repositories/users.repository";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 require("dotenv").config();
-const AppError = require("../utils/error");
-class UserService {
+import { AppError } from "../utils/error";
+
+export class UserService {
   userRepository = new UserRepository();
 
   register = async ({ password, nickname }) => {
@@ -38,7 +39,7 @@ class UserService {
   };
 
   //-정규식-//
-  validateSignUp = async (nickname, password) => {
+  validateSignUp = async (nickname: string, password: string) => {
     //-닉네임-//
     const nicknameRegex = /^[a-zA-Z0-9]{3,}$/;
     if (!nicknameRegex.test(nickname)) {

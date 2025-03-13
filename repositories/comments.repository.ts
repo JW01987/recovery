@@ -1,7 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-class CommentRepository {
+export class CommentRepository {
   getListById = async (userId) => {
     try {
       return await prisma.comments.findMany({

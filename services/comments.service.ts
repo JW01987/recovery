@@ -1,9 +1,10 @@
-const CommentRepository = require("../repositories/comments.repository");
-const AppError = require("../utils/error");
-class CommentService {
+import { CommentRepository } from "../repositories/comments.repository";
+import { AppError } from "../utils/error";
+
+export class CommentService {
   commentRepository = new CommentRepository();
 
-  getList = async (userId) => {
+  getList = async (userId: Number) => {
     return await this.commentRepository.findById({ userId });
   };
 
@@ -11,7 +12,7 @@ class CommentService {
     if (content.trim().length == 0)
       throw new AppError("내용을 입력해주세요", 400);
     const comment = await this.commentRepository.findById(commentId);
-    if (!comment) throw AppError("존재하지 않은 댓글입니다", 404);
+    if (!comment) throw new AppError("존재하지 않은 댓글입니다", 404);
     if (comment.userId == userId) {
       const result = await this.commentRepository.update({
         commentId,
@@ -26,7 +27,7 @@ class CommentService {
 
   commentDelete = async ({ commentId, userId }) => {
     const comment = this.commentRepository.findById(commentId);
-    if (!comment) throw AppError("존재하지 않은 댓글입니다", 404);
+    if (!comment) throw new AppError("존재하지 않은 댓글입니다", 404);
     if (comment.userId == userId) {
       const result = await this.commentRepository.delete(commentId);
       if (result) {

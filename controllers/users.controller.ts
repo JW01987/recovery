@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthRequest } from "../utils/authRequest";
-const UserService = require("../services/users.service");
+import { UserService } from "../services/users.service";
 
-class UsersController {
+export class UsersController {
   userService = new UserService();
 
   register = async (req: Request, res: Response, next: NextFunction) => {

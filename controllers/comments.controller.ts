@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../utils/authRequest";
-const CommentService = require("../services/comments.service");
+import { CommentService } from "../services/comments.service";
 
 export class CommentsController {
   commentService = new CommentService();

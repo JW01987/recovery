@@ -1,7 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-class LikesRepository {
+export class LikesRepository {
   findFirst = async ({ userId, postId }) => {
     try {
       return await prisma.likes.findFirst({

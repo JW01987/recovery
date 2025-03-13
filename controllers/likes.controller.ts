@@ -1,8 +1,8 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../utils/authRequest";
-const LikesService = require("../services/likes.service");
+import { LikesService } from "../services/likes.service";
 
-class LikesController {
+export class LikesController {
   likeService = new LikesService();
 
   like = async (req: AuthRequest, res: Response, next: NextFunction) => {

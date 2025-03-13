@@ -1,7 +1,8 @@
-const LikesRepository = require("../repositories/likes.repository");
-const PostsRepository = require("../repositories/posts.repository");
-const AppError = require("../utils/error");
-class LikesService {
+import { LikesRepository } from "../repositories/likes.repository";
+import { PostsRepository } from "../repositories/posts.repository";
+import { AppError } from "../utils/error";
+
+export class LikesService {
   likesRepository = new LikesRepository();
   postsRepository = new PostsRepository();
 
@@ -33,7 +34,7 @@ class LikesService {
     }
   };
   likeGet = async (userId) => {
-    const posts = await postsRepository.findManyByLike(userId);
+    const posts = await this.postsRepository.findManyByLike(userId);
     if (!posts) return { result: "좋아요한 게시글이 없습니다" };
     const result = posts.sort((a, b) => b._count.Likes - a._count.Likes);
     return { result };

@@ -1,6 +1,7 @@
-const PostRepository = require("../repositories/posts.repository");
-const AppError = require("../utils/error");
-class PostService {
+import { PostRepository } from "../repositories/posts.repository";
+import { AppError } from "../utils/error";
+
+export class PostService {
   postRepository = new PostRepository();
 
   getPostAll = async () => {

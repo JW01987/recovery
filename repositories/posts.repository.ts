@@ -1,7 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-class PostRepository {
+export class PostRepository {
   getPostAll = async () => {
     try {
       return await prisma.posts.findMany({
@@ -81,11 +81,11 @@ class PostRepository {
       throw new Error(error.message || "레포지토리에서 에러 발생");
     }
   };
-  createPost = async () => {
+  createPost = async ({ title, content, userId }) => {
     try {
       return await prisma.posts.create({
         data: {
-          userId: id,
+          userId,
           title,
           content,
         },

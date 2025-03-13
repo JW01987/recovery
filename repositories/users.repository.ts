@@ -1,7 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-class UserRepository {
+export class UserRepository {
   findByUnique = async (nickname) => {
     try {
       return await prisma.users.findUnique({
