@@ -1,7 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-export class PostRepository {
+export class PostsRepository {
   getPostAll = async () => {
     try {
       return await prisma.posts.findMany({

@@ -1,11 +1,16 @@
-import { PostRepository } from "../repositories/posts.repository";
+import { PostsRepository } from "../repositories/posts.repository";
+import {
+  CreatePostDto,
+  DeletePostDto,
+  UpdatePostDto,
+} from "../utils/dtos/postDto";
 import { AppError } from "../utils/error";
 
 export class PostService {
-  postRepository = new PostRepository();
+  postsRepository = new PostsRepository();
 
   getPostAll = async () => {
-    const allPost = await this.postRepository.getPostAll();
+    const allPost = await this.postsRepository.getPostAll();
 
     if (!allPost || allPost.length == 0) {
       throw new AppError("게시글이 존재하지 않습니다", 404);
@@ -13,8 +18,8 @@ export class PostService {
 
     return allPost;
   };
-  getPosts = async ({ userId }) => {
-    const posts = await this.postRepository.getUserPosts({ userId });
+  getPosts = async ({ userId }: { userId: number }) => {
+    const posts = await this.postsRepository.getUserPosts({ userId });
 
     if (!posts || posts.length == 0) {
       throw new AppError("게시글이 존재하지 않습니다", 404);
@@ -22,11 +27,11 @@ export class PostService {
 
     return posts;
   };
-  updatePost = async ({ userId, title, content, postId }) => {
-    const postFind = await this.postRepository.findUniquePost(userId);
+  updatePost = async ({ userId, title, content, postId }: UpdatePostDto) => {
+    const postFind = await this.postsRepository.findUniquePost(userId);
 
     if (postFind.userId == userId) {
-      await this.postRepository.updatePost({
+      await this.postsRepository.updatePost({
         title,
         content,
         postId,
@@ -35,19 +40,19 @@ export class PostService {
       throw new AppError("작성자만 게시글을 수정할 수 있습니다", 401);
     }
   };
-  deletePost = async ({ postId, userId }) => {
-    const postFind = await this.postRepository.findUniquePost(userId);
+  deletePost = async ({ postId, userId }: DeletePostDto) => {
+    const postFind = await this.postsRepository.findUniquePost(userId);
 
     if (postFind.userId == userId) {
-      await this.postRepository.deletePost({
+      await this.postsRepository.deletePost({
         postId,
       });
     } else {
       throw new AppError("작성자만 게시글을 삭제할 수 있습니다", 401);
     }
   };
-  createPost = async ({ title, content, userId }) => {
-    await this.postRepository.createPost({
+  createPost = async ({ title, content, userId }: CreatePostDto) => {
+    await this.postsRepository.createPost({
       title,
       content,
       userId,

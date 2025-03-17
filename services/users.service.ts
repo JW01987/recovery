@@ -1,13 +1,13 @@
 import { UserRepository } from "../repositories/users.repository";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-require("dotenv").config();
 import { AppError } from "../utils/error";
-
+import { UserDto } from "../utils/dtos/userDto";
+require("dotenv").config();
 export class UserService {
   userRepository = new UserRepository();
 
-  register = async ({ password, nickname }) => {
+  register = async ({ nickname, password }: UserDto) => {
     await this.validateSignUp(nickname, password);
     //중복닉네임 확인
     const userFind = await this.userRepository.findByUnique(nickname);
@@ -16,10 +16,9 @@ export class UserService {
       //- 암호화-//
       const hashedPassword = await bcrypt.hash(password, 10);
       await this.userRepository.createUser({ nickname, hashedPassword });
-      return { success: true };
     } else throw new AppError("이미 존재하는 닉네임입니다", 400);
   };
-  login = async ({ nickname, password }) => {
+  login = async ({ nickname, password }: UserDto) => {
     const user = await this.userRepository.findByUnique(nickname);
 
     if (!user) throw new AppError("존재하지 않는 닉네임입니다.", 404);
@@ -32,10 +31,10 @@ export class UserService {
         userId: user.id,
       },
       //- 시크릿키 설정하기-//
-      process.env.KEY_USER
+      process.env.KEY_USER!
     );
 
-    return { success: true, token };
+    return { token };
   };
 
   //-정규식-//

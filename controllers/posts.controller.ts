@@ -1,6 +1,11 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../utils/authRequest";
 import { PostService } from "../services/posts.service";
+import {
+  CreatePostDto,
+  DeletePostDto,
+  UpdatePostDto,
+} from "../utils/dtos/postDto";
 
 export class PostsController {
   postService = new PostService();
@@ -18,7 +23,7 @@ export class PostsController {
   getPosts = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
-      const userId: number = Number(req.user.id);
+      const userId = req.user.id;
       const userPost = await this.postService.getPosts({ userId });
       res.status(200).json({ data: userPost });
     } catch (error) {
@@ -27,12 +32,16 @@ export class PostsController {
     }
   };
 
-  updatePost = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  updatePost = async (
+    req: AuthRequest<UpdatePostDto, {}, UpdatePostDto>,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const userId = req.user.id;
       const { title, content } = req.body;
-      const postId = Number(req.params.postId);
+      const postId = req.params.postId;
 
       await this.postService.updatePost({
         userId,
@@ -46,10 +55,14 @@ export class PostsController {
       next(error);
     }
   };
-  deletePost = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  deletePost = async (
+    req: AuthRequest<DeletePostDto, {}, {}>,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
-      const postId = Number(req.params.postId);
+      const postId = req.params.postId;
       const userId = req.user.id;
 
       await this.postService.deletePost({ postId, userId });
@@ -59,7 +72,11 @@ export class PostsController {
       next(error);
     }
   };
-  createPost = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  createPost = async (
+    req: AuthRequest<{}, {}, CreatePostDto>,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const { title, content } = req.body;

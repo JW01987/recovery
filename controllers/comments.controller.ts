@@ -1,6 +1,11 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../utils/authRequest";
 import { CommentService } from "../services/comments.service";
+import {
+  CommentCreateDto,
+  CommentDeleteDto,
+  CommentUpdateDto,
+} from "../utils/dtos/commentDto";
 
 export class CommentsController {
   commentService = new CommentService();
@@ -17,7 +22,7 @@ export class CommentsController {
     }
   };
   commentUpdate = async (
-    req: AuthRequest,
+    req: AuthRequest<CommentUpdateDto, {}, CommentUpdateDto>,
     res: Response,
     next: NextFunction
   ) => {
@@ -26,7 +31,7 @@ export class CommentsController {
       const { commentId } = req.params;
       const { content } = req.body;
       const userId = req.user.id;
-      const { success } = await this.commentService.commentUpdate({
+      const success = await this.commentService.commentUpdate({
         commentId,
         content,
         userId,
@@ -40,7 +45,7 @@ export class CommentsController {
     }
   };
   commentDelete = async (
-    req: AuthRequest,
+    req: AuthRequest<CommentDeleteDto, {}, {}>,
     res: Response,
     next: NextFunction
   ) => {
@@ -49,7 +54,7 @@ export class CommentsController {
       const { commentId } = req.params;
       const userId = req.user.id;
 
-      const { success } = await this.commentService.commentDelete({
+      const success = await this.commentService.commentDelete({
         commentId,
         userId,
       });
@@ -62,7 +67,7 @@ export class CommentsController {
     }
   };
   commentCreate = async (
-    req: AuthRequest,
+    req: AuthRequest<{}, {}, CommentCreateDto>,
     res: Response,
     next: NextFunction
   ) => {

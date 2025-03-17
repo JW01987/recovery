@@ -1,15 +1,20 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../utils/authRequest";
-import { LikesService } from "../services/likes.service";
+import { LikeService } from "../services/likes.service";
 import { Users } from "@prisma/client";
+import { likeDto } from "../utils/dtos/likeDto";
 export class LikesController {
-  likeService = new LikesService();
+  likeService = new LikeService();
 
-  like = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  like = async (
+    req: AuthRequest<likeDto, {}, {}>,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const userId = req.user.id;
-      const postId = Number(req.params.postId);
+      const postId = req.params.postId;
       const like: boolean = await this.likeService.like({ userId, postId });
       if (like) {
         res.status(200).json({ message: "좋아요를 등록했습니다" });

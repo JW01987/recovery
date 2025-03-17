@@ -25,7 +25,7 @@ export class LikesRepository {
     }
   };
 
-  update = async (userId, postId, isLike) => {
+  update = async ({ userId, postId, isLike }) => {
     try {
       return await prisma.likes.update({
         where: { userId_postId: { userId, postId } },
