@@ -2,26 +2,22 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 export class UserRepository {
-  findByUnique = async (nickname) => {
-    try {
-      return await prisma.users.findUnique({
-        where: { nickname },
-      });
-    } catch (error) {
-      console.log("[Repository] 유저 조회 실패");
-      throw new Error(error.message || "레포지토리에서 에러 발생");
-    }
+  findByUnique = async (nickname: string) => {
+    return await prisma.users.findUnique({
+      where: { nickname },
+    });
   };
 
-  createUser = async ({ nickname, hashedPassword }) => {
-    try {
-      return await prisma.users.create({
-        data: { nickname, password: hashedPassword },
-      });
-    } catch (error) {
-      console.log("[Repository] 유저 생성 실패");
-      throw new Error(error.message || "레포지토리에서 에러 발생");
-    }
+  createUser = async ({
+    nickname,
+    hashedPassword,
+  }: {
+    nickname: string;
+    hashedPassword: string;
+  }) => {
+    return await prisma.users.create({
+      data: { nickname, password: hashedPassword },
+    });
   };
 }
 

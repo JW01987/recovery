@@ -1,4 +1,5 @@
-export interface likeDto {
+export interface LikeDto {
   userId: number;
   postId: number;
+  isLike?: boolean;
 }

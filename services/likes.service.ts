@@ -1,12 +1,12 @@
 import { LikesRepository } from "../repositories/likes.repository";
 import { PostsRepository } from "../repositories/posts.repository";
-import { likeDto } from "../utils/dtos/likeDto";
+import { LikeDto } from "../utils/dtos/likeDto";
 
 export class LikeService {
   likesRepository = new LikesRepository();
   postsRepository = new PostsRepository();
 
-  like = async ({ userId, postId }: likeDto) => {
+  like = async ({ userId, postId }: LikeDto) => {
     const postLike = await this.likesRepository.findFirst({ userId, postId });
 
     if (postLike === null) {

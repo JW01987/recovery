@@ -11,7 +11,7 @@ export class CommentService {
   commentRepository = new CommentRepository();
 
   getList = async (userId: number) => {
-    return await this.commentRepository.findById({ userId });
+    return await this.commentRepository.findById(userId);
   };
 
   commentUpdate = async ({ commentId, content, userId }: CommentUpdateDto) => {

@@ -2,12 +2,12 @@ import { Response, NextFunction } from "express";
 import { AuthRequest } from "../utils/authRequest";
 import { LikeService } from "../services/likes.service";
 import { Users } from "@prisma/client";
-import { likeDto } from "../utils/dtos/likeDto";
+import { LikeDto } from "../utils/dtos/likeDto";
 export class LikesController {
   likeService = new LikeService();
 
   like = async (
-    req: AuthRequest<likeDto, {}, {}>,
+    req: AuthRequest<LikeDto, {}, {}>,
     res: Response,
     next: NextFunction
   ) => {
