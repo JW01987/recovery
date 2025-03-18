@@ -1,16 +1,14 @@
-# 💊 JS 재활치료 lv5
+# 💊 JS 재활치료 lv6
 
-## Layered Architecture Pattern
+## TypeScript
 
 ### 🔧 이용한 툴
 
-`NodeJS` `express` `mySQL` `prisma`
+`NodeJS` `express` `mySQL` `prisma` `TypeScript`
 
 ### 구현 할 내용 (과제)
 
-1. Layered Architecture Pattern을 적용하여 Lv.4 프로젝트 개선하기
-2. 에러 처리하기
-   2-1 미들웨어로 에러 처리하기
+1. TypeScript을 적용하여 Lv.5 프로젝트를 마이그레이션하기
 
 ### ERD
 
@@ -86,29 +84,78 @@
 
 ### 트러블 슈팅
 
-#### 1. [구조분해할당으로 파라미터를 넘기기](https://velog.io/@jw01987/%EB%82%98%EB%A7%8C-%ED%97%B7%EA%B0%88%EB%A6%AC%EB%8A%94-%EA%B5%AC%EC%A1%B0%EB%B6%84%ED%95%B4%ED%95%A0%EB%8B%B9)
+[1. Request 타입을 지정하는 문제](https://velog.io/@jw01987/TS%EC%97%90%EC%84%9C-%ED%83%80%EC%9E%85%EC%A7%80%EC%A0%95%ED%95%A0%EB%95%8C%EB%8A%94-%EC%B6%9C%EC%B2%98%EB%A5%BC-%ED%99%95%EC%8B%A4%ED%9E%88)
 
-#### 2. 메세지를 클라이언트에게 리턴해야할때 어디서 리턴해야하는지
+2. 커스텀 리퀘스트타입이 제네릭을 안 받을때
 
-문제: 메세지를 클라이언트에 보내야하는 경우가 많은데 컨트롤러, 서비스 중 어디에서 메세지를 보내야하는지 모르겠다
+[3. DTO를 만들어 관리해보자](https://velog.io/@jw01987/DTO%EB%A5%BC-%EB%A7%8C%EB%93%A4%EC%96%B4%EB%B4%85%EC%8B%9C%EB%8B%A4)
 
-문제해결: [NestJS의 공식문서에서](https://docs.nestjs.com/controllers) 예시로 든 상황이 대부분 컨트롤러에서 리턴함. 컨트롤러는 클라이언트의 요청을 받아들이고, 서비스 계층을 호출하여 비즈니스 로직을 처리한 후, 그 결과를 클라이언트에게 응답하는 역할을 함.
+4. process.env.KEY_USER 오버로드를 찾을 수 없대요
+   process.env.KEY_USER! 로 해결
+   ! (type assertion)은 값이 undefined가 되지 않을 것임을 컴파일러에 알리는 데 사용됩니다. 예를 들어, 변수의 유형은 "string | undefined | null"일 수 있습니다. 이 변수를 할당하려고 하면 컴파일러는 값이 null이거나 정의되지 않을 수 있다고 불평할 것이므로 !(type assertion)을 이용해서 null 이나 undefined가 아님을 책임을 지고 컴파일러에게 해당 검사를 무시하거나 제거하도록 지시합니다. 그래서 이 문제를 해결할 수 있습니다. 감사합니다.
 
-```js
-  @Post()
-  create(): string {
-    return 'This action adds a new cat';
-  }
+5. 리퀘스트 데이터 타입의 코드 개선
 
-  @Get()
-  findAll(): string {
-    return 'This action returns all cats';
-  }
+요청 데이터의 타입을 명확히 구분하기 어렵고 모호한 부분이 존재
+AuthRequest타입에 제네릭으로 dto를 적용하여 기존의 코드를 개선
+
+```ts
+// 기존 제네릭 타입
+export interface RequestBodyT {
+  user?: Users;
+  title?: string;
+  content?: string;
+  nickname?: string;
+  password?: string;
+  postId?: number;
+}
+
+export interface RequestParamsT {
+  userId?: number;
+  postId?: number;
+  commentId?: number;
+}
 ```
 
-#### 3. 서비스, 레포지토리에서 리턴할 값이 없으면 무엇을 리턴해야하나
+```ts
+//매개변수로 사용하던 타입들을 AuthRequest 제네릭으로 사용
+export interface PostBaseDto {
+  userId: number;
+}
+export interface UpdatePostDto extends PostBaseDto {
+  title: string;
+  content: string;
+  postId: number;
+}
+export interface DeletePostDto extends PostBaseDto {
+  postId: number;
+}
 
-문제: 컨트롤러에서 메세지만 리턴하면 되는데 서비스와 레포지토리에서는 어떤걸 리턴해야할지 모르겠다
+export interface CreatePostDto extends PostBaseDto {
+  title: string;
+  content: string;
+}
 
-문제해결: 서비스에서 레포지포리에서 반환한 DB리턴 값으로 확인 후 Boolean을 반환하기로 함
-![](https://velog.velcdn.com/images/jw01987/post/2335aa71-8e67-44b0-97eb-d554ab2976ee/image.png)
+
+////
+
+ commentUpdate = async (
+    req: AuthRequest<CommentUpdateDto, {}, CommentUpdateDto>,
+    res: Response,
+    next: NextFunction
+  ) => {
+```
+
+커스텀 리퀘스트랑 리퀘스트 핸들러랑 충돌
+
+1. 커스텀 리퀘스트대신 걍 리퀘스트 확장해봄 (안됨)
+2. 함수 반환이 문제인것 같아서 반환을 void로 바꿈 (안됨)
+3. 파라미터 타입을 직접 입력함 (해결)
+   Request<{ commentId: string }>가 되는 이유
+
+req.params.commentId는 항상 string 타입이므로 { commentId: string }을 지정해야 함.
+만약 number로 사용하고 싶다면, Number(req.params.commentId)로 변환하면 됨.
+✅ 🚀 Request<CommentDeleteDto>가 안 되는 이유
+req.params.commentId는 string인데, CommentDeleteDto.commentId는 number라서 TypeScript가 타입 불일치 오류를 발생시킴.
+
+3-1 커스텀 리퀘스트를 다시 써봄 -> 정상 작동함 -> 기존거 확장보다는 새로 타입 만들어 쓰는게 안전할것같아서 커스텀 리퀘스트타입 사용

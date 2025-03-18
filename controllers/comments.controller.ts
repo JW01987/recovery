@@ -1,11 +1,7 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../utils/authRequest";
 import { CommentService } from "../services/comments.service";
-import {
-  CommentCreateDto,
-  CommentDeleteDto,
-  CommentUpdateDto,
-} from "../utils/dtos/commentDto";
+import { CommentCreateDto, CommentUpdateDto } from "../utils/dtos/commentDto";
 
 export class CommentsController {
   commentService = new CommentService();
@@ -22,13 +18,13 @@ export class CommentsController {
     }
   };
   commentUpdate = async (
-    req: AuthRequest<CommentUpdateDto, {}, CommentUpdateDto>,
+    req: AuthRequest<{ commentId: string }, {}, CommentUpdateDto>,
     res: Response,
     next: NextFunction
   ) => {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
-      const { commentId } = req.params;
+      const commentId = Number(req.params.commentId);
       const { content } = req.body;
       const userId = req.user.id;
       const success = await this.commentService.commentUpdate({
@@ -37,7 +33,7 @@ export class CommentsController {
         userId,
       });
       if (success) {
-        return res.status(200).json({ message: "댓글 수정 완료" });
+        res.status(200).json({ message: "댓글 수정 완료" });
       }
     } catch (error) {
       console.error("[Controller] 댓글 수정 실패:", error);
@@ -45,13 +41,13 @@ export class CommentsController {
     }
   };
   commentDelete = async (
-    req: AuthRequest<CommentDeleteDto, {}, {}>,
+    req: AuthRequest<{ commentId: string }, {}, {}>,
     res: Response,
     next: NextFunction
   ) => {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
-      const { commentId } = req.params;
+      const commentId = Number(req.params.commentId);
       const userId = req.user.id;
 
       const success = await this.commentService.commentDelete({
@@ -59,7 +55,7 @@ export class CommentsController {
         userId,
       });
       if (success) {
-        return res.status(200).json({ message: "댓글 삭제 완료" });
+        res.status(200).json({ message: "댓글 삭제 완료" });
       }
     } catch (error) {
       console.error("[Controller] 댓글 삭제 실패:", error);
@@ -82,7 +78,7 @@ export class CommentsController {
         userId,
       });
       if (success) {
-        return res.status(200).json({ message: "댓글 등록 완료" });
+        res.status(200).json({ message: "댓글 등록 완료" });
       }
     } catch (error) {
       console.error("[Controller] 댓글 작성 실패:", error);

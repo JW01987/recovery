@@ -1,11 +1,7 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../utils/authRequest";
 import { PostService } from "../services/posts.service";
-import {
-  CreatePostDto,
-  DeletePostDto,
-  UpdatePostDto,
-} from "../utils/dtos/postDto";
+import { CreatePostDto, UpdatePostDto } from "../utils/dtos/postDto";
 
 export class PostsController {
   postService = new PostService();
@@ -33,7 +29,7 @@ export class PostsController {
   };
 
   updatePost = async (
-    req: AuthRequest<UpdatePostDto, {}, UpdatePostDto>,
+    req: AuthRequest<{ postId: string }, {}, UpdatePostDto>,
     res: Response,
     next: NextFunction
   ) => {
@@ -41,7 +37,7 @@ export class PostsController {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const userId = req.user.id;
       const { title, content } = req.body;
-      const postId = req.params.postId;
+      const postId = Number(req.params.postId);
 
       await this.postService.updatePost({
         userId,
@@ -49,24 +45,24 @@ export class PostsController {
         content,
         postId,
       });
-      return res.status(200).json({ message: "게시글 수정성공" });
+      res.status(200).json({ message: "게시글 수정성공" });
     } catch (error) {
       console.error("[Controller] 게시글 수정 실패:", error);
       next(error);
     }
   };
   deletePost = async (
-    req: AuthRequest<DeletePostDto, {}, {}>,
+    req: AuthRequest<{ postId: string }, {}, {}>,
     res: Response,
     next: NextFunction
   ) => {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
-      const postId = req.params.postId;
+      const postId = Number(req.params.postId);
       const userId = req.user.id;
 
       await this.postService.deletePost({ postId, userId });
-      return res.status(200).json({ message: "게시글 삭제 성공" });
+      res.status(200).json({ message: "게시글 삭제 성공" });
     } catch (error) {
       console.error("[Controller] 게시글 삭제 실패:", error);
       next(error);
@@ -88,7 +84,7 @@ export class PostsController {
         userId,
       });
 
-      return res.status(200).json({ message: "게시글 등록 성공" });
+      res.status(200).json({ message: "게시글 등록 성공" });
     } catch (error) {
       console.error("[Controller] 게시글 등록 실패:", error);
       next(error);
