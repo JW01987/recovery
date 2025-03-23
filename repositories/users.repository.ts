@@ -20,5 +20,3 @@ export class UserRepository {
     });
   };
 }
-
-module.exports = UserRepository;

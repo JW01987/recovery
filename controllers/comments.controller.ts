@@ -13,7 +13,7 @@ export class CommentsController {
       const result = await this.commentService.getList(userId);
       res.status(200).json({ result });
     } catch (error) {
-      console.error("[Controller] 댓글 불러오기 실패:", error);
+      console.error("[Controller] 댓글 불러오기 실패");
       next(error);
     }
   };
@@ -36,7 +36,7 @@ export class CommentsController {
         res.status(200).json({ message: "댓글 수정 완료" });
       }
     } catch (error) {
-      console.error("[Controller] 댓글 수정 실패:", error);
+      console.error("[Controller] 댓글 수정 실패");
       next(error);
     }
   };
@@ -58,7 +58,7 @@ export class CommentsController {
         res.status(200).json({ message: "댓글 삭제 완료" });
       }
     } catch (error) {
-      console.error("[Controller] 댓글 삭제 실패:", error);
+      console.error("[Controller] 댓글 삭제 실패");
       next(error);
     }
   };
@@ -81,7 +81,7 @@ export class CommentsController {
         res.status(200).json({ message: "댓글 등록 완료" });
       }
     } catch (error) {
-      console.error("[Controller] 댓글 작성 실패:", error);
+      console.error("[Controller] 댓글 작성 실패");
       next(error);
     }
   };

@@ -52,4 +52,3 @@ export class CommentService {
     return true;
   };
 }
-module.exports = CommentService;

@@ -19,7 +19,7 @@ export class UsersController {
       });
       res.status(200).json({ message: "회원가입이 완료되었습니다" });
     } catch (error) {
-      console.error("[Controller] 회원가입 실패:", error);
+      console.error("[Controller] 회원가입 실패");
       next(error);
     }
   };
@@ -39,9 +39,8 @@ export class UsersController {
       res.cookie("authorization", `Bearer ${token}`);
       res.status(200).json({ message: "로그인이 완료되었습니다" });
     } catch (error) {
-      console.error("[Controller] 로그인 실패:", error);
+      console.error("[Controller] 로그인 실패");
       next(error);
     }
   };
 }
-module.exports = UsersController;

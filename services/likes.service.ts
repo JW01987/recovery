@@ -31,5 +31,3 @@ export class LikeService {
     return { result };
   };
 }
-
-module.exports = LikeService;

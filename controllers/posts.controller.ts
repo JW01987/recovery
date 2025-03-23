@@ -11,7 +11,7 @@ export class PostsController {
       const posts = await this.postService.getPostAll();
       res.status(200).json({ data: posts });
     } catch (error) {
-      console.error("[Controller] 게시글 조회 실패:", error);
+      console.error("[Controller] 게시글 조회 실패");
       next(error);
     }
   };
@@ -23,7 +23,7 @@ export class PostsController {
       const userPost = await this.postService.getPosts({ userId });
       res.status(200).json({ data: userPost });
     } catch (error) {
-      console.error("[Controller] 게시글 조회 실패:", error);
+      console.error("[Controller] 게시글 조회 실패");
       next(error);
     }
   };
@@ -47,7 +47,7 @@ export class PostsController {
       });
       res.status(200).json({ message: "게시글 수정성공" });
     } catch (error) {
-      console.error("[Controller] 게시글 수정 실패:", error);
+      console.error("[Controller] 게시글 수정 실패");
       next(error);
     }
   };
@@ -64,7 +64,7 @@ export class PostsController {
       await this.postService.deletePost({ postId, userId });
       res.status(200).json({ message: "게시글 삭제 성공" });
     } catch (error) {
-      console.error("[Controller] 게시글 삭제 실패:", error);
+      console.error("[Controller] 게시글 삭제 실패");
       next(error);
     }
   };
@@ -86,10 +86,8 @@ export class PostsController {
 
       res.status(200).json({ message: "게시글 등록 성공" });
     } catch (error) {
-      console.error("[Controller] 게시글 등록 실패:", error);
+      console.error("[Controller] 게시글 등록 실패");
       next(error);
     }
   };
 }
-
-module.exports = PostsController;

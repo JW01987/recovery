@@ -22,3 +22,5 @@ app.get("/", (req: Request, res: Response) => {
 app.listen(port, async () => {
   console.log("server started!");
 });
+
+export default app;

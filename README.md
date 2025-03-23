@@ -4,11 +4,12 @@
 
 ### 🔧 이용한 툴
 
-`NodeJS` `express` `mySQL` `prisma` `TypeScript`
+`NodeJS` `express` `mySQL` `prisma` `TypeScript` `Jest`
 
 ### 구현 할 내용 (과제)
 
 1. TypeScript을 적용하여 Lv.5 프로젝트를 마이그레이션하기
+2. 테스트 코드 사용하기
 
 ### ERD
 
@@ -19,7 +20,7 @@
 | 기능             | method | API path                |
 | ---------------- | ------ | ----------------------- |
 | 회원가입         | POST   | /api/register           |
-| 로그인           | PATCH  | /api/login              |
+| 로그인           | GET    | /api/login              |
 | 게시글 모두 조회 | GET    | /api/postall            |
 | 게시글 조회      | GET    | /api/post               |
 | 게시글 작성      | POST   | /api/post               |
@@ -97,3 +98,5 @@
 [2. DTO를 만들어 관리해보자](https://velog.io/@jw01987/DTO%EB%A5%BC-%EB%A7%8C%EB%93%A4%EC%96%B4%EB%B4%85%EC%8B%9C%EB%8B%A4)
 
 [3. 커스텀 리퀘스트 타입과 리퀘스트 핸들러 충돌](https://velog.io/@jw01987/%EB%A6%AC%ED%80%98%EC%8A%A4%ED%8A%B8-%ED%83%80%EC%9E%85%EA%B3%BC-%EB%A6%AC%ED%80%98%EC%8A%A4%ED%8A%B8-%ED%95%B8%EB%93%A4%EB%9F%AC-%EC%B6%A9%EB%8F%8C)
+
+5. 테스트 코드

@@ -59,5 +59,3 @@ export class PostService {
     });
   };
 }
-
-module.exports = PostService;

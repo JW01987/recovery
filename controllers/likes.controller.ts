@@ -20,7 +20,7 @@ export class LikesController {
         res.status(200).json({ message: "좋아요를 취소했습니다" });
       }
     } catch (error) {
-      console.error("[Controller] 좋아요 등록 실패:", error);
+      console.error("[Controller] 좋아요 등록 실패");
       next(error);
     }
   };
@@ -32,9 +32,8 @@ export class LikesController {
       const { result } = await this.likeService.likeGet(userId);
       res.status(200).json({ result });
     } catch (error) {
-      console.error("[Controller] 로그인 실패:", error);
+      console.error("[Controller] 좋아요 게시글 불러오기 실패");
       next(error);
     }
   };
 }
-module.exports = LikesController;

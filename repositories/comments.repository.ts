@@ -46,4 +46,3 @@ export class CommentRepository {
     });
   };
 }
-module.exports = CommentRepository;

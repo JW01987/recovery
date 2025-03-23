@@ -21,9 +21,8 @@ export class UserService {
   login = async ({ nickname, password }: UserDto) => {
     const user = await this.userRepository.findByUnique(nickname);
 
-    if (!user) throw new AppError("존재하지 않는 닉네임입니다.", 404);
-    else if (!(await bcrypt.compare(password, user.password)))
-      throw new AppError("비밀번호가 일치하지 않습니다.", 400);
+    if (!user || !(await bcrypt.compare(password, user.password)))
+      throw new AppError("닉네임 또는 비밀번호가 잘못되었습니다", 400);
 
     // 로그인에 성공하면, 사용자의 userId를 바탕으로 토큰을 생성합니다.
     const token = jwt.sign(
@@ -62,5 +61,3 @@ export class UserService {
     return true;
   };
 }
-
-module.exports = UserService;
