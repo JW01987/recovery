@@ -1,3 +1,4 @@
+import { connect } from "http2";
 import { PostsRepository } from "../repositories/posts.repository";
 import {
   CreatePostDto,
@@ -5,6 +6,7 @@ import {
   UpdatePostDto,
 } from "../utils/dtos/postDto";
 import { AppError } from "../utils/error";
+import { Posts, Users } from "@prisma/client";
 
 export class PostService {
   postsRepository = new PostsRepository();
@@ -28,8 +30,9 @@ export class PostService {
     return posts;
   };
   updatePost = async ({ userId, title, content, postId }: UpdatePostDto) => {
-    const postFind = await this.postsRepository.findUniquePost(userId);
-
+    const postFind: Posts = await this.postsRepository.findUniquePost(postId);
+    if (title.length == 0 || content.length == 0)
+      throw new AppError("제목과 내용은 비워둘 수 없습니다", 400);
     if (postFind.userId == userId) {
       await this.postsRepository.updatePost({
         title,
@@ -41,7 +44,7 @@ export class PostService {
     }
   };
   deletePost = async ({ postId, userId }: DeletePostDto) => {
-    const postFind = await this.postsRepository.findUniquePost(userId);
+    const postFind: Posts = await this.postsRepository.findUniquePost(postId);
 
     if (postFind.userId == userId) {
       await this.postsRepository.deletePost({
@@ -52,7 +55,9 @@ export class PostService {
     }
   };
   createPost = async ({ title, content, userId }: CreatePostDto) => {
-    await this.postsRepository.createPost({
+    if (title.length == 0 || content.length == 0)
+      throw new AppError("제목과 내용은 비워둘 수 없습니다", 400);
+    return await this.postsRepository.createPost({
       title,
       content,
       userId,

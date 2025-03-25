@@ -2,6 +2,7 @@ import { Response, NextFunction } from "express";
 import { AuthRequest } from "../utils/authRequest";
 import { PostService } from "../services/posts.service";
 import { CreatePostDto, UpdatePostDto } from "../utils/dtos/postDto";
+import { Posts } from "@prisma/client";
 
 export class PostsController {
   postService = new PostService();
@@ -78,13 +79,13 @@ export class PostsController {
       const { title, content } = req.body;
       const userId = req.user.id;
 
-      await this.postService.createPost({
+      const result: Posts = await this.postService.createPost({
         title,
         content,
         userId,
       });
 
-      res.status(200).json({ message: "게시글 등록 성공" });
+      res.status(200).json({ message: "게시글 등록 성공", postId: result.id });
     } catch (error) {
       console.error("[Controller] 게시글 등록 실패");
       next(error);
