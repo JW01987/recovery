@@ -83,6 +83,11 @@
 │ ├── authRequest.ts
 │ └── error.ts
 │
+├── 🗂️ test
+│ ├── comment.test.ts
+│ ├── like.test.ts
+│ ├── post.test.ts
+│ └── user.test.ts
 │
 ├── tsconfig.json
 ├── README.md
@@ -99,4 +104,4 @@
 
 [3. 커스텀 리퀘스트 타입과 리퀘스트 핸들러 충돌](https://velog.io/@jw01987/%EB%A6%AC%ED%80%98%EC%8A%A4%ED%8A%B8-%ED%83%80%EC%9E%85%EA%B3%BC-%EB%A6%AC%ED%80%98%EC%8A%A4%ED%8A%B8-%ED%95%B8%EB%93%A4%EB%9F%AC-%EC%B6%A9%EB%8F%8C)
 
-5. 테스트 코드
+[4. 포트 충돌 오류](https://velog.io/@jw01987/%ED%8C%8C%EC%9D%BC%EB%8B%A8%EC%9C%84%EB%A1%9C-%ED%85%8C%EC%8A%A4%ED%8A%B8%ED%95%A0%EB%95%8C%EB%8A%94-%ED%86%B5%EA%B3%BC%ED%96%88%EC%9C%BC%EB%82%98-jest%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%B4%EC%84%9C-%ED%85%8C%EC%8A%A4%ED%8A%B8%ED%95%98%EB%A9%B4-%EC%98%A4%EB%A5%98%ED%8F%AC%ED%8A%B8-%EC%B6%A9%EB%8F%8C-%EC%98%A4%EB%A5%98)
