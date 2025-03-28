@@ -19,8 +19,10 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
-app.listen(port, async () => {
-  console.log("server started!");
-});
+if (process.env.TEST !== "true") {
+  app.listen(port, async () => {
+    console.log("server started!");
+  });
+}
 
 export default app;

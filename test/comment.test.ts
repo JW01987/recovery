@@ -9,11 +9,11 @@ describe("댓글 작성 테스트", () => {
   beforeAll(async () => {
     await request(app)
       .post("/api/register")
-      .send({ nickname: "kim", password: "@pass1234word@" });
+      .send({ nickname: "kim1", password: "@pass1234word@" });
 
     const res = await request(app)
       .get("/api/login")
-      .send({ nickname: "kim", password: "@pass1234word@" });
+      .send({ nickname: "kim1", password: "@pass1234word@" });
 
     const rawCookie = res.headers["set-cookie"][0]; // 쿠키 값 가져오기
     token = rawCookie.split(";")[0];
@@ -45,7 +45,7 @@ describe("댓글 작성 테스트", () => {
     expect(res.body.message).toBe("로그인 후 이용 가능한 기능입니다.");
   });
 
-  test("✅  게시글 작성 - 성공", async () => {
+  test("✅ 댓글 작성 - 성공", async () => {
     const res = await request(app)
       .post("/api/comment")
       .set("Cookie", token)
@@ -86,15 +86,15 @@ describe("댓글 불러오기 테스트", () => {
     }
 
     writerToken = await makeToken({
-      nickname: "kim",
+      nickname: "kim2",
       password: "pass@1234@word",
     });
     commentToken1 = await makeToken({
-      nickname: "park",
+      nickname: "park1",
       password: "pass@5678@word",
     });
     commentToken2 = await makeToken({
-      nickname: "lee",
+      nickname: "lee1",
       password: "pass@91011@word",
     });
 
@@ -165,11 +165,11 @@ describe("댓글 삭제, 업데이트 테스트", () => {
     }
 
     postToken = await makeToken({
-      nickname: "kim",
+      nickname: "kim3",
       password: "pass@1234@word",
     });
     commentToken = await makeToken({
-      nickname: "park",
+      nickname: "park2",
       password: "pass@5678@word",
     });
 

@@ -10,7 +10,7 @@ export class PostsController {
   getPostAll = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
       const posts = await this.postService.getPostAll();
-      res.status(200).json({ data: posts });
+      res.status(200).json({ posts });
     } catch (error) {
       console.error("[Controller] 게시글 조회 실패");
       next(error);
@@ -21,8 +21,8 @@ export class PostsController {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const userId = req.user.id;
-      const userPost = await this.postService.getPosts({ userId });
-      res.status(200).json({ data: userPost });
+      const posts = await this.postService.getPosts({ userId });
+      res.status(200).json({ posts });
     } catch (error) {
       console.error("[Controller] 게시글 조회 실패");
       next(error);

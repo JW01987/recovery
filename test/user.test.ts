@@ -33,7 +33,7 @@ describe("회원가입 테스트", () => {
   test("❌ 회원가입 - 실패(비밀번호 조건 미달:4자 이상)", async () => {
     const res = await request(app)
       .post("/api/register")
-      .send({ nickname: "kim", password: "e" });
+      .send({ nickname: "kim15", password: "e" });
 
     expect(res.status).toBe(400);
     expect(res.body.message).toBe("비밀번호는 최소 4자 이상이어야 합니다.");
@@ -53,7 +53,7 @@ describe("회원가입 테스트", () => {
   test("✅ 회원가입 -  성공", async () => {
     const res = await request(app)
       .post("/api/register")
-      .send({ nickname: "kim", password: "@pass1234word@" });
+      .send({ nickname: "kim16", password: "@pass1234word@" });
 
     expect(res.status).toBe(200);
     expect(res.body.message).toBe("회원가입이 완료되었습니다");
@@ -68,7 +68,7 @@ describe("로그인 테스트", () => {
   beforeAll(async () => {
     await request(app)
       .post("/api/register")
-      .send({ nickname: "kim", password: "@pass1234word@" });
+      .send({ nickname: "kim17", password: "@pass1234word@" });
   });
 
   test("❌ 로그인 - 실패(닉네임 오류)", async () => {
@@ -83,7 +83,7 @@ describe("로그인 테스트", () => {
   test("❌ 로그인 - 실패(비밀번호 오류)", async () => {
     const res = await request(app)
       .get("/api/login")
-      .send({ nickname: "kim", password: "empty" });
+      .send({ nickname: "kim17", password: "empty" });
     expect(res.status).toBe(400);
     expect(res.body.message).toBe("닉네임 또는 비밀번호가 잘못되었습니다");
   });
@@ -91,7 +91,7 @@ describe("로그인 테스트", () => {
   test("✅ 로그인 - 성공", async () => {
     const res = await request(app)
       .get("/api/login")
-      .send({ nickname: "kim", password: "@pass1234word@" });
+      .send({ nickname: "kim17", password: "@pass1234word@" });
 
     expect(res.status).toBe(200);
     expect(res.body.message).toBe("로그인이 완료되었습니다");

@@ -8,11 +8,11 @@ describe("게시글 작성 테스트", () => {
   beforeAll(async () => {
     await request(app)
       .post("/api/register")
-      .send({ nickname: "kim", password: "@pass1234word@" });
+      .send({ nickname: "kim10", password: "@pass1234word@" });
 
     const res = await request(app)
       .get("/api/login")
-      .send({ nickname: "kim", password: "@pass1234word@" });
+      .send({ nickname: "kim10", password: "@pass1234word@" });
 
     const rawCookie = res.headers["set-cookie"][0]; // 쿠키 값 가져오기
     token = rawCookie.split(";")[0];
@@ -55,34 +55,53 @@ describe("게시글 작성 테스트", () => {
 });
 
 describe("게시글 불러오기 테스트", () => {
-  let token: string;
+  let token1: string;
+  let token2: string;
   beforeAll(async () => {
-    await request(app)
-      .post("/api/register")
-      .send({ nickname: "kim", password: "@pass1234word@" });
+    async function makeToken({
+      nickname,
+      password,
+    }: {
+      nickname: string;
+      password: string;
+    }) {
+      await request(app).post("/api/register").send({ nickname, password });
 
-    const res = await request(app)
-      .get("/api/login")
-      .send({ nickname: "kim", password: "@pass1234word@" });
+      const res = await request(app)
+        .get("/api/login")
+        .send({ nickname, password });
 
-    const rawCookie = res.headers["set-cookie"][0]; // 쿠키 값 가져오기
-    token = rawCookie.split(";")[0];
+      const rawCookie = res.headers["set-cookie"][0]; // 쿠키 값 가져오기
+      return rawCookie.split(";")[0];
+    }
 
-    await request(app)
-      .post("/api/post")
-      .set("Cookie", token)
-      .send({ title: "kim의 게시물 1", content: "게시글 내용 1" });
+    token1 = await makeToken({
+      nickname: "kim11",
+      password: "pass@1234@word",
+    });
+    token2 = await makeToken({
+      nickname: "kim12",
+      password: "pass@1234@word",
+    });
 
-    await request(app)
-      .post("/api/post")
-      .set("Cookie", token)
-      .send({ title: "kim의 게시물 2", content: "게시글 내용 2" });
+    async function makePost(token: string, title: string, content: string) {
+      const result = await request(app)
+        .post("/api/post")
+        .set("Cookie", token)
+        .send({ title, content });
+    }
+
+    await makePost(token1, "kim1의 게시글 1", "내용1");
+    await makePost(token1, "kim1의 게시글 2", "내용2");
+    await makePost(token1, "kim1의 게시글 3", "내용3");
+    await makePost(token2, "kim2의 게시글 1", "내용1");
+    await makePost(token2, "kim2의 게시글 2", "내용2");
   });
 
   test("✅ 게시글 모두 불러오기 - 성공", async () => {
     const res = await request(app).get("/api/postall");
     expect(res.status).toBe(200);
-    expect(res.body);
+    expect(res.body.posts.length).toBe(5);
   });
 
   test("❌ 내 게시글 불러오기 - 실패(로그인 안 함)", async () => {
@@ -92,9 +111,9 @@ describe("게시글 불러오기 테스트", () => {
   });
 
   test("✅ 내 게시글 불러오기 - 성공", async () => {
-    const res = await request(app).get("/api/post").set("Cookie", token);
+    const res = await request(app).get("/api/post").set("Cookie", token1);
     expect(res.status).toBe(200);
-    expect(res.body);
+    expect(res.body.posts.length).toBe(3);
   });
 
   afterAll(async () => {
@@ -109,11 +128,11 @@ describe("게시글 삭제, 업데이트 테스트", () => {
   beforeAll(async () => {
     await request(app)
       .post("/api/register")
-      .send({ nickname: "kim", password: "@pass1234word@" });
+      .send({ nickname: "kim13", password: "@pass1234word@" });
 
     const res = await request(app)
       .get("/api/login")
-      .send({ nickname: "kim", password: "@pass1234word@" });
+      .send({ nickname: "kim13", password: "@pass1234word@" });
 
     const rawCookie = res.headers["set-cookie"][0];
     token = rawCookie.split(";")[0];
