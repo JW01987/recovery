@@ -10,7 +10,7 @@ export class CommentRepository {
   };
   findById = async (commentId: number) => {
     return await prisma.comments.findUnique({
-      where: { id: +commentId },
+      where: { id: commentId },
     });
   };
   update = async ({
@@ -21,12 +21,12 @@ export class CommentRepository {
     content: string;
   }) => {
     return await prisma.comments.update({
-      where: { id: +commentId },
+      where: { id: commentId },
       data: { content },
     });
   };
   delete = async (commentId: number) => {
-    return await prisma.comments.delete({ where: { id: +commentId } });
+    return await prisma.comments.delete({ where: { id: commentId } });
   };
   create = async ({
     content,
@@ -40,7 +40,7 @@ export class CommentRepository {
     return await prisma.comments.create({
       data: {
         content,
-        postId: +postId,
+        postId,
         userId,
       },
     });

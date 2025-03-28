@@ -12,9 +12,8 @@ export const authMiddleware: RequestHandler = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    console.log("req.cookies;", req.cookies);
     const { authorization } = req.cookies;
-    console.log("쿠키 내용", authorization);
+
     if (!authorization) {
       next(new AppError("로그인 후 이용 가능한 기능입니다.", 401));
       return;

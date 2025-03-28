@@ -11,7 +11,7 @@ export class CommentService {
   commentRepository = new CommentRepository();
 
   getList = async (userId: number) => {
-    return await this.commentRepository.findById(userId);
+    return await this.commentRepository.getListById(userId);
   };
 
   commentUpdate = async ({ commentId, content, userId }: CommentUpdateDto) => {
@@ -43,12 +43,10 @@ export class CommentService {
     if (content.trim().length == 0)
       throw new AppError("내용을 입력해주세요", 400);
 
-    await this.commentRepository.create({
+    return await this.commentRepository.create({
       content,
       postId,
       userId,
     });
-
-    return true;
   };
 }

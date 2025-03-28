@@ -5,7 +5,7 @@ import { CommentsController } from "../controllers/comments.controller";
 const router: Router = express.Router();
 const commentsController = new CommentsController();
 
-router.get("/comment", commentsController.commentList);
+router.get("/comment", authMiddleware, commentsController.commentList);
 
 router.patch(
   "/comment/:commentId",

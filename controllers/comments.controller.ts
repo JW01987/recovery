@@ -2,6 +2,7 @@ import { Response, NextFunction } from "express";
 import { AuthRequest } from "../utils/authRequest";
 import { CommentService } from "../services/comments.service";
 import { CommentCreateDto, CommentUpdateDto } from "../utils/dtos/commentDto";
+import { Comments } from "@prisma/client";
 
 export class CommentsController {
   commentService = new CommentService();
@@ -27,14 +28,13 @@ export class CommentsController {
       const commentId = Number(req.params.commentId);
       const { content } = req.body;
       const userId = req.user.id;
-      const success = await this.commentService.commentUpdate({
+      await this.commentService.commentUpdate({
         commentId,
         content,
         userId,
       });
-      if (success) {
-        res.status(200).json({ message: "댓글 수정 완료" });
-      }
+
+      res.status(200).json({ message: "댓글 수정 완료" });
     } catch (error) {
       console.error("[Controller] 댓글 수정 실패");
       next(error);
@@ -50,13 +50,12 @@ export class CommentsController {
       const commentId = Number(req.params.commentId);
       const userId = req.user.id;
 
-      const success = await this.commentService.commentDelete({
+      await this.commentService.commentDelete({
         commentId,
         userId,
       });
-      if (success) {
-        res.status(200).json({ message: "댓글 삭제 완료" });
-      }
+
+      res.status(200).json({ message: "댓글 삭제 완료" });
     } catch (error) {
       console.error("[Controller] 댓글 삭제 실패");
       next(error);
@@ -71,15 +70,13 @@ export class CommentsController {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const { content, postId } = req.body;
       const userId = req.user.id;
-
-      const success = await this.commentService.commentCreate({
+      const result: Comments = await this.commentService.commentCreate({
         content,
         postId,
         userId,
       });
-      if (success) {
-        res.status(200).json({ message: "댓글 등록 완료" });
-      }
+
+      res.status(200).json({ message: "댓글 등록 완료", commentId: result.id });
     } catch (error) {
       console.error("[Controller] 댓글 작성 실패");
       next(error);

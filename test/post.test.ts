@@ -135,7 +135,6 @@ describe("게시글 삭제, 업데이트 테스트", () => {
   });
 
   test("✅ 게시글 업데이트 - 성공", async () => {
-    console.log("✅ 게시글 업데이트 - 성공");
     const res = await request(app)
       .patch(`/api/post/${postId}`)
       .set("Cookie", token)
@@ -151,7 +150,6 @@ describe("게시글 삭제, 업데이트 테스트", () => {
   });
 
   test("✅ 게시글 삭제 - 성공", async () => {
-    console.log("✅ 게시글 삭제 - 성공");
     const res = await request(app)
       .delete(`/api/post/${postId}`)
       .set("Cookie", token);
