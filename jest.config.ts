@@ -1,3 +1,4 @@
+require("dotenv").config({ path: ".env.test" });
 module.exports = {
   preset: "ts-jest", // ts-jest 사용
   testEnvironment: "node", // 테스트 환경 설정
