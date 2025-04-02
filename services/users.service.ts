@@ -2,7 +2,7 @@ import { UserRepository } from "../repositories/users.repository";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { AppError } from "../utils/error";
-import { UserDto } from "../utils/dtos/userDto";
+import { UserDto } from "../dto/userDto";
 require("dotenv").config();
 export class UserService {
   userRepository = new UserRepository();
@@ -19,7 +19,9 @@ export class UserService {
     } else throw new AppError("이미 존재하는 닉네임입니다", 400);
   };
   login = async ({ nickname, password }: UserDto) => {
-    const user = await this.userRepository.findByUnique(nickname);
+    const user = await this.prisma.users.findUnique({
+      where: { nickname },
+    });
 
     if (!user || !(await bcrypt.compare(password, user.password)))
       throw new AppError("닉네임 또는 비밀번호가 잘못되었습니다", 400);

@@ -1,15 +1,14 @@
-# 💊 JS 재활치료 lv6
+# 💊 JS 재활치료 lv6-1
 
 ## TypeScript
 
 ### 🔧 이용한 툴
 
-`NodeJS` `express` `mySQL` `prisma` `TypeScript` `Jest`
+`NodeJS` `NestJS` `mySQL` `prisma` `TypeScript` `Jest`
 
 ### 구현 할 내용 (과제)
 
-1. TypeScript을 적용하여 Lv.5 프로젝트를 마이그레이션하기
-2. 테스트 코드 사용하기
+1. NestJS을 적용하여 Lv.6 프로젝트를 마이그레이션하기
 
 ### ERD
 
@@ -97,11 +96,3 @@
 ```
 
 ### 트러블 슈팅
-
-[1. Request 타입을 지정하는 문제](https://velog.io/@jw01987/TS%EC%97%90%EC%84%9C-%ED%83%80%EC%9E%85%EC%A7%80%EC%A0%95%ED%95%A0%EB%95%8C%EB%8A%94-%EC%B6%9C%EC%B2%98%EB%A5%BC-%ED%99%95%EC%8B%A4%ED%9E%88)
-
-[2. DTO를 만들어 관리해보자](https://velog.io/@jw01987/DTO%EB%A5%BC-%EB%A7%8C%EB%93%A4%EC%96%B4%EB%B4%85%EC%8B%9C%EB%8B%A4)
-
-[3. 커스텀 리퀘스트 타입과 리퀘스트 핸들러 충돌](https://velog.io/@jw01987/%EB%A6%AC%ED%80%98%EC%8A%A4%ED%8A%B8-%ED%83%80%EC%9E%85%EA%B3%BC-%EB%A6%AC%ED%80%98%EC%8A%A4%ED%8A%B8-%ED%95%B8%EB%93%A4%EB%9F%AC-%EC%B6%A9%EB%8F%8C)
-
-[4. 포트 충돌 오류](https://velog.io/@jw01987/%ED%8C%8C%EC%9D%BC%EB%8B%A8%EC%9C%84%EB%A1%9C-%ED%85%8C%EC%8A%A4%ED%8A%B8%ED%95%A0%EB%95%8C%EB%8A%94-%ED%86%B5%EA%B3%BC%ED%96%88%EC%9C%BC%EB%82%98-jest%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%B4%EC%84%9C-%ED%85%8C%EC%8A%A4%ED%8A%B8%ED%95%98%EB%A9%B4-%EC%98%A4%EB%A5%98%ED%8F%AC%ED%8A%B8-%EC%B6%A9%EB%8F%8C-%EC%98%A4%EB%A5%98)
