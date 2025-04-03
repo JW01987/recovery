@@ -19,14 +19,14 @@ export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @Post("/register")
-  async register(@Body() userDto: UserDto) {
+  async register(@Body() userDto: UserDto, @Res() res: Response) {
     try {
       const { password, nickname } = userDto;
       await this.userService.register({
         nickname,
         password,
       });
-      return { message: "회원가입이 완료되었습니다" };
+      res.status(200).json({ message: "회원가입이 완료되었습니다" });
     } catch (error) {
       console.error("[Controller] 회원가입 실패");
       throw new HttpException("회원가입 실패", HttpStatus.BAD_REQUEST);
