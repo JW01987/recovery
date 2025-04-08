@@ -13,7 +13,7 @@ import {
   Req,
 } from "@nestjs/common";
 import { Response } from "express";
-import { AuthRequest } from "../../utils/authRequest";
+import { AuthRequest } from "../utils/authRequest";
 import { LikesService } from "./likes.service";
 
 @Controller("api")

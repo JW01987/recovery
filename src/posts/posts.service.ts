@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { AppError } from "../../utils/error";
+import { AppError } from "../utils/error";
 import { CreatePostDto, UpdatePostDto } from "../dto/postDto";
 import { Posts } from "@prisma/client";
 @Injectable()

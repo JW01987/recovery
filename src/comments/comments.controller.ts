@@ -12,7 +12,7 @@ import {
   Req,
 } from "@nestjs/common";
 import { Response } from "express";
-import { AuthRequest } from "../../utils/authRequest";
+import { AuthRequest } from "../utils/authRequest";
 import { Comments, Posts } from "@prisma/client";
 import { CommentsService } from "./comments.service";
 import { CommentCreateDto, CommentDto } from "../dto/commentDto";

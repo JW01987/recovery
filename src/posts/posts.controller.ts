@@ -14,7 +14,7 @@ import {
 } from "@nestjs/common";
 import { PostsService } from "./posts.service";
 import { Response } from "express";
-import { AuthRequest } from "../../utils/authRequest";
+import { AuthRequest } from "../utils/authRequest";
 import { PostDto } from "../dto/postDto";
 import { Posts } from "@prisma/client";
 

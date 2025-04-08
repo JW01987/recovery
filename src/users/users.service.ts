@@ -4,7 +4,7 @@ import { UserDto } from "../dto/userDto";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 require("dotenv").config();
-import { AppError } from "../../utils/error";
+import { AppError } from "../utils/error";
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
