@@ -23,32 +23,32 @@ export class PostsController {
   constructor(private readonly postService: PostsService) {}
 
   @Get("/postall")
-  async getPostAll(@Res() res: Response) {
+  async getPostAll() {
     try {
       const posts = await this.postService.getPostAll();
-      res.status(200).json({ posts });
+      return { posts };
     } catch (error) {
       console.error("[Controller] 게시글 조회 실패");
-      throw new HttpException("게시글 조회 실패", HttpStatus.UNAUTHORIZED);
+      throw error;
     }
   }
   @Get("/post")
-  async getPosts(@Req() req: AuthRequest, @Res() res: Response) {
+  async getPosts(@Req() req: AuthRequest) {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const userId = req.user.id;
       const posts = await this.postService.getPosts({ userId });
-      res.status(200).json({ posts });
+      return { posts };
     } catch (error) {
       console.error("[Controller] 게시글 조회 실패");
-      throw new HttpException("게시글 조회 실패", HttpStatus.UNAUTHORIZED);
+      throw error;
     }
   }
   @Patch("/post/:postId")
   async updatePost(
     @Body() body: PostDto,
     @Param() postId: number,
-    @Res() res: Response,
+
     @Req() req: AuthRequest
   ) {
     try {
@@ -62,32 +62,32 @@ export class PostsController {
         content,
         postId,
       });
-      res.status(200).json({ message: "게시글 수정성공" });
+      return { message: "게시글 수정성공" };
     } catch (error) {
       console.error("[Controller] 게시글 수정 실패");
-      throw new HttpException("게시글 수정 실패", HttpStatus.UNAUTHORIZED);
+      throw error;
     }
   }
   @Delete("/post/:postId")
   async deletePost(
     @Param() postId: number,
-    @Res() res: Response,
+
     @Req() req: AuthRequest
   ) {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const userId = req.user.id;
       await this.postService.deletePost({ postId, userId });
-      res.status(200).json({ message: "게시글 삭제 성공" });
+      return { message: "게시글 삭제 성공" };
     } catch (error) {
       console.error("[Controller] 게시글 삭제 실패");
-      throw new HttpException("게시글 삭제 실패", HttpStatus.UNAUTHORIZED);
+      throw error;
     }
   }
   @Post("/post")
   async createPost(
     @Body() body: PostDto,
-    @Res() res: Response,
+
     @Req() req: AuthRequest
   ) {
     try {
@@ -101,10 +101,10 @@ export class PostsController {
         userId,
       });
 
-      res.status(200).json({ message: "게시글 등록 성공", postId: result.id });
+      return { message: "게시글 등록 성공", postId: result.id };
     } catch (error) {
       console.error("[Controller] 게시글 등록 실패");
-      throw new HttpException("게시글 등록 실패", HttpStatus.UNAUTHORIZED);
+      throw error;
     }
   }
 }

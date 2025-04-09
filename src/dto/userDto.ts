@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty } from "class-validator";
+import { IsString, IsNotEmpty, Matches } from "class-validator";
 
 export class UserDto {
   @IsString()

@@ -31,13 +31,13 @@ export class LikesController {
       const userId = req.user.id;
       const like: boolean = await this.likeServices.like({ userId, postId });
       if (like) {
-        res.status(200).json({ message: "좋아요를 등록했습니다" });
+        return { message: "좋아요를 등록했습니다" };
       } else {
-        res.status(200).json({ message: "좋아요를 취소했습니다" });
+        return { message: "좋아요를 취소했습니다" };
       }
     } catch (error) {
       console.error("[Controller] 좋아요 등록 실패");
-      throw new HttpException("좋아요 등록 실패", HttpStatus.UNAUTHORIZED);
+      throw error;
     }
   }
 
@@ -47,13 +47,10 @@ export class LikesController {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const userId = req.user.id;
       const { result } = await this.likeServices.likeGet(userId);
-      res.status(200).json({ result });
+      return { result };
     } catch (error) {
       console.error("[Controller] 좋아요 게시글 불러오기 실패");
-      throw new HttpException(
-        "좋아요 게시글 불러오기 실패",
-        HttpStatus.UNAUTHORIZED
-      );
+      throw error;
     }
   }
 }

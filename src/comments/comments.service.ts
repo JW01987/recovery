@@ -1,6 +1,5 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { AppError } from "../utils/error";
 import {
   CommentCreateDto,
   CommentDeleteDto,
@@ -20,11 +19,11 @@ export class CommentsService {
 
   async commentUpdate({ commentId, content, userId }: CommentUpdateDto) {
     if (content.trim().length == 0)
-      throw new AppError("내용을 입력해주세요", 400);
+      throw new HttpException("내용을 입력해주세요", 400);
     const comment: Comments | null = await this.prisma.comments.findUnique({
       where: { id: commentId },
     });
-    if (!comment) throw new AppError("존재하지 않은 댓글입니다", 404);
+    if (!comment) throw new HttpException("존재하지 않은 댓글입니다", 404);
     if (comment.userId == userId) {
       await this.prisma.comments.update({
         where: { id: commentId },
@@ -32,24 +31,24 @@ export class CommentsService {
       });
       return true;
     }
-    throw new AppError("작성자만 댓글을 수정할 수 있습니다", 401);
+    throw new HttpException("작성자만 댓글을 수정할 수 있습니다", 401);
   }
 
   async commentDelete({ commentId, userId }: CommentDeleteDto) {
     const comment: Comments | null = await this.prisma.comments.findUnique({
       where: { id: commentId },
     });
-    if (!comment) throw new AppError("존재하지 않은 댓글입니다", 404);
+    if (!comment) throw new HttpException("존재하지 않은 댓글입니다", 404);
     if (comment.userId == userId) {
       await this.prisma.comments.delete({ where: { id: commentId } });
       return true;
     }
-    throw new AppError("작성자만 댓글을 삭제 할 수 있습니다", 401);
+    throw new HttpException("작성자만 댓글을 삭제 할 수 있습니다", 401);
   }
 
   async commentCreate({ content, postId, userId }: CommentCreateDto) {
     if (content.trim().length == 0)
-      throw new AppError("내용을 입력해주세요", 400);
+      throw new HttpException("내용을 입력해주세요", 400);
 
     return await this.prisma.comments.create({
       data: {
