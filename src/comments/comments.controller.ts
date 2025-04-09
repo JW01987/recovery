@@ -10,18 +10,21 @@ import {
   HttpStatus,
   Res,
   Req,
+  UseGuards,
 } from "@nestjs/common";
 import { Response } from "express";
 import { AuthRequest } from "../utils/authRequest";
 import { Comments } from "@prisma/client";
 import { CommentsService } from "./comments.service";
 import { CommentDto } from "../dto/commentDto";
+import { AuthGuard } from "../middlewares/auth";
 
 @Controller("comments")
 export class CommentsController {
   constructor(private readonly commentService: CommentsService) {}
 
   @Get("/comment")
+  @UseGuards(AuthGuard)
   async commentList(@Req() req: AuthRequest) {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
@@ -35,6 +38,7 @@ export class CommentsController {
   }
 
   @Patch("/comment/:commentId")
+  @UseGuards(AuthGuard)
   async commentUpdate(
     @Req() req: AuthRequest,
     @Body() content: string,
@@ -57,6 +61,7 @@ export class CommentsController {
   }
 
   @Delete("/comment/:commentId")
+  @UseGuards(AuthGuard)
   async commentDelete(
     @Req() req: AuthRequest,
     @Res() res: Response,
@@ -77,6 +82,7 @@ export class CommentsController {
     }
   }
   @Post("comment")
+  @UseGuards(AuthGuard)
   async commentCreate(@Req() req: AuthRequest, @Body() body: CommentDto) {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");

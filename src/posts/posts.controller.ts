@@ -6,17 +6,15 @@ import {
   Param,
   Post,
   Patch,
-  Put,
-  HttpException,
-  HttpStatus,
-  Res,
   Req,
+  UseGuards,
+  ParseIntPipe,
 } from "@nestjs/common";
 import { PostsService } from "./posts.service";
-import { Response } from "express";
 import { AuthRequest } from "../utils/authRequest";
 import { PostDto } from "../dto/postDto";
 import { Posts } from "@prisma/client";
+import { AuthGuard } from "../middlewares/auth";
 
 @Controller("api")
 export class PostsController {
@@ -33,6 +31,7 @@ export class PostsController {
     }
   }
   @Get("/post")
+  @UseGuards(AuthGuard)
   async getPosts(@Req() req: AuthRequest) {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
@@ -45,10 +44,10 @@ export class PostsController {
     }
   }
   @Patch("/post/:postId")
+  @UseGuards(AuthGuard)
   async updatePost(
     @Body() body: PostDto,
-    @Param() postId: number,
-
+    @Param("postId", ParseIntPipe) postId: number,
     @Req() req: AuthRequest
   ) {
     try {
@@ -69,9 +68,9 @@ export class PostsController {
     }
   }
   @Delete("/post/:postId")
+  @UseGuards(AuthGuard)
   async deletePost(
-    @Param() postId: number,
-
+    @Param("postId", ParseIntPipe) postId: number,
     @Req() req: AuthRequest
   ) {
     try {
@@ -85,11 +84,8 @@ export class PostsController {
     }
   }
   @Post("/post")
-  async createPost(
-    @Body() body: PostDto,
-
-    @Req() req: AuthRequest
-  ) {
+  @UseGuards(AuthGuard)
+  async createPost(@Body() body: PostDto, @Req() req: AuthRequest) {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const { title, content } = body;

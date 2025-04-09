@@ -11,16 +11,19 @@ import {
   HttpStatus,
   Res,
   Req,
+  UseGuards,
 } from "@nestjs/common";
 import { Response } from "express";
 import { AuthRequest } from "../utils/authRequest";
 import { LikesService } from "./likes.service";
+import { AuthGuard } from "../middlewares/auth";
 
 @Controller("api")
 export class LikesController {
   constructor(private readonly likeServices: LikesService) {}
 
   @Post("/like/:postId")
+  @UseGuards(AuthGuard)
   async like(
     @Req() req: AuthRequest,
     @Res() res: Response,
@@ -42,6 +45,7 @@ export class LikesController {
   }
 
   @Get("/like")
+  @UseGuards(AuthGuard)
   async likeGet(@Req() req: AuthRequest, @Res() res: Response) {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");

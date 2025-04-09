@@ -1,49 +1,46 @@
-import jwt from "jsonwebtoken";
-import { PrismaClient } from "@prisma/client";
-import { Response, NextFunction, RequestHandler } from "express";
-import { AuthRequest } from "../utils/authRequest";
-import { AppError } from "../utils/error";
-const prisma = new PrismaClient();
-require("dotenv").config();
+import {
+  CanActivate,
+  ExecutionContext,
+  HttpException,
+  Injectable,
+} from "@nestjs/common";
+import { Request } from "express";
+import { PrismaService } from "../prisma/prisma.service";
+import * as jwt from "jsonwebtoken";
 
-export const authMiddleware: RequestHandler = async (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const { authorization } = req.cookies;
+@Injectable()
+export class AuthGuard implements CanActivate {
+  constructor(private readonly prisma: PrismaService) {}
 
-    if (!authorization) {
-      next(new AppError("로그인 후 이용 가능한 기능입니다.", 401));
-      return;
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const req = context.switchToHttp().getRequest<Request>();
+    const token = req.headers.cookie;
+
+    if (!token) {
+      throw new HttpException("로그인 후 이용 가능한 기능입니다.", 401);
     }
 
-    const [tokenType, token] = authorization.split(" ");
-    //- 토큰 타입 확인-//
-    if (tokenType !== "Bearer") {
-      next(new AppError("토큰 타입이 일치하지 않습니다.", 400));
-      return;
+    // const [type, token] = authorization.split(" ");
+    // if (type !== "Bearer") {
+    //   throw new HttpException("토큰 타입이 일치하지 않습니다.", 401);
+    // }
+
+    try {
+      const decoded = jwt.verify(token, process.env.KEY_USER as string) as {
+        userId: number;
+      };
+      const user = await this.prisma.users.findUnique({
+        where: { id: decoded.userId },
+      });
+
+      if (!user) {
+        throw new HttpException("사용자가 존재하지 않습니다.", 400);
+      }
+
+      (req as any).user = user;
+      return true;
+    } catch (err) {
+      throw new HttpException("인증 실패", 401);
     }
-
-    //-시크릿 키 설정하기-//
-    const decodedToken = jwt.verify(token, process.env.KEY_USER as string) as {
-      userId: number;
-    };
-    const userId = decodedToken.userId;
-    const user = await prisma.users.findUnique({ where: { id: userId } });
-
-    if (!user) {
-      res.clearCookie("authorization");
-      next(new AppError("사용자가 존재하지 않습니다.", 401));
-      return;
-    }
-
-    req.user = user;
-    next();
-  } catch (err) {
-    res.clearCookie("authorization");
-    next(new Error("오류가 발생했습니다"));
-    return;
   }
-};
+}

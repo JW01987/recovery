@@ -1,7 +1,8 @@
+import { Test, TestingModule } from "@nestjs/testing";
+import { INestApplication } from "@nestjs/common";
 import request from "supertest";
-import app from "../../app";
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { AppModule } from "../app.module";
+import { PrismaService } from "../prisma/prisma.service";
 
 describe("좋아요 등록, 취소 테스트", () => {
   let postToken: string;

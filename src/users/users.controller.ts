@@ -27,7 +27,6 @@ export class UsersController {
     try {
       const token = await this.userService.login(userDto);
       res.cookie("authorization", `Bearer ${token}`);
-
       return res.json({ message: "로그인이 완료되었습니다" });
     } catch (error) {
       console.error("[Controller] 로그인 실패", error);
