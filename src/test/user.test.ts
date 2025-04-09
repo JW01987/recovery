@@ -1,10 +1,11 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { INestApplication } from "@nestjs/common";
 import request from "supertest";
-import { AppModule } from "../../src-nest/app.module";
+import { AppModule } from "../app.module";
 import { PrismaService } from "../prisma/prisma.service";
 
 describe("회원가입 및 로그인 API 테스트 (E2E)", () => {
+  jest.setTimeout(10000);
   let app: INestApplication;
   let prisma: PrismaService;
 
@@ -20,6 +21,12 @@ describe("회원가입 및 로그인 API 테스트 (E2E)", () => {
   });
 
   describe("회원가입 테스트", () => {
+    beforeEach(async () => {
+      await request(app.getHttpServer())
+        .post("/api/register")
+        .send({ nickname: "nick", password: "@pass1234word@" });
+    });
+
     test("❌ 회원가입 - 실패(중복 닉네임)", async () => {
       const res = await request(app.getHttpServer())
         .post("/api/register")
@@ -65,53 +72,55 @@ describe("회원가입 및 로그인 API 테스트 (E2E)", () => {
         .post("/api/register")
         .send({ nickname: "kim16", password: "@pass1234word@" });
 
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(201);
       expect(res.body.message).toBe("회원가입이 완료되었습니다");
     });
 
-    afterAll(async () => {
+    afterEach(async () => {
       await prisma.users.deleteMany();
-      await app.close();
     });
   });
 
-  // describe("로그인 테스트", () => {
-  //   beforeAll(async () => {
-  //     await request(app.getHttpServer())
-  //       .post("/api/register")
-  //       .send({ nickname: "kim17", password: "@pass1234word@" });
-  //   });
+  describe("로그인 테스트", () => {
+    beforeEach(async () => {
+      await request(app.getHttpServer())
+        .post("/api/register")
+        .send({ nickname: "kim17", password: "@pass1234word@" });
+    });
 
-  //   test("❌ 로그인 - 실패(닉네임 오류)", async () => {
-  //     const res = await request(app.getHttpServer())
-  //       .get("/api/login")
-  //       .send({ nickname: "empty", password: "@pass1234word@" });
+    test("❌ 로그인 - 실패(닉네임 오류)", async () => {
+      const res = await request(app.getHttpServer())
+        .post("/api/login")
+        .send({ nickname: "empty", password: "@pass1234word@" });
 
-  //     expect(res.status).toBe(400);
-  //     expect(res.body.message).toBe("닉네임 또는 비밀번호가 잘못되었습니다");
-  //   });
+      expect(res.status).toBe(400);
+      expect(res.body.message).toBe("닉네임 또는 비밀번호가 잘못되었습니다");
+    });
 
-  //   test("❌ 로그인 - 실패(비밀번호 오류)", async () => {
-  //     const res = await request(app.getHttpServer())
-  //       .get("/api/login")
-  //       .send({ nickname: "kim17", password: "empty" });
-  //     expect(res.status).toBe(400);
-  //     expect(res.body.message).toBe("닉네임 또는 비밀번호가 잘못되었습니다");
-  //   });
+    test("❌ 로그인 - 실패(비밀번호 오류)", async () => {
+      const res = await request(app.getHttpServer())
+        .post("/api/login")
+        .send({ nickname: "kim17", password: "empty" });
+      expect(res.status).toBe(400);
+      expect(res.body.message).toBe("닉네임 또는 비밀번호가 잘못되었습니다");
+    });
 
-  //   test("✅ 로그인 - 성공", async () => {
-  //     const res = await request(app.getHttpServer())
-  //       .get("/api/login")
-  //       .send({ nickname: "kim17", password: "@pass1234word@" });
+    test("✅ 로그인 - 성공", async () => {
+      const res = await request(app.getHttpServer())
+        .post("/api/login")
+        .send({ nickname: "kim17", password: "@pass1234word@" });
 
-  //     expect(res.status).toBe(200);
-  //     expect(res.body.message).toBe("로그인이 완료되었습니다");
-  //     expect(res.headers["set-cookie"]).toBeDefined();
-  //   });
+      expect(res.status).toBe(201);
+      expect(res.body.message).toBe("로그인이 완료되었습니다");
+      expect(res.headers["set-cookie"]).toBeDefined();
+    });
 
-  //   afterAll(async () => {
-  //     await prisma.users.deleteMany();
-  //     await app.close();
-  //   });
-  // });
+    afterEach(async () => {
+      await prisma.users.deleteMany();
+    });
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
 });
