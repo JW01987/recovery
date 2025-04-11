@@ -12,6 +12,7 @@ import {
   Res,
   Req,
   UseGuards,
+  ParseIntPipe,
 } from "@nestjs/common";
 import { Response } from "express";
 import { AuthRequest } from "../utils/authRequest";
@@ -26,8 +27,7 @@ export class LikesController {
   @UseGuards(AuthGuard)
   async like(
     @Req() req: AuthRequest,
-    @Res() res: Response,
-    @Param() postId: number
+    @Param("postId", ParseIntPipe) postId: number
   ) {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
