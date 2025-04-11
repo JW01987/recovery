@@ -46,7 +46,7 @@ export class LikesController {
 
   @Get("/like")
   @UseGuards(AuthGuard)
-  async likeGet(@Req() req: AuthRequest, @Res() res: Response) {
+  async likeGet(@Req() req: AuthRequest) {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
       const userId = req.user.id;

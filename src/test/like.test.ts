@@ -100,95 +100,95 @@ describe("게시글 API 테스트 (E2E)", () => {
     });
   });
 
-  // describe("좋아요한 게시글 불러오기 테스트", () => {
-  //   let postToken1: string;
-  //   let postToken2: string;
-  //   let postToken3: string;
-  //   let postToken4: string;
-  //   let likeToken: string;
-  //   beforeEach(async () => {
-  //     async function makeToken({
-  //       nickname,
-  //       password,
-  //     }: {
-  //       nickname: string;
-  //       password: string;
-  //     }) {
-  //       await request(app.getHttpServer())
-  //         .post("/api/register")
-  //         .send({ nickname, password });
+  describe("좋아요한 게시글 불러오기 테스트", () => {
+    let postToken1: string;
+    let postToken2: string;
+    let postToken3: string;
+    let postToken4: string;
+    let likeToken: string;
+    beforeEach(async () => {
+      async function makeToken({
+        nickname,
+        password,
+      }: {
+        nickname: string;
+        password: string;
+      }) {
+        await request(app.getHttpServer())
+          .post("/api/register")
+          .send({ nickname, password });
 
-  //       const res = await request(app.getHttpServer())
-  //         .post("/api/login")
-  //         .send({ nickname, password });
+        const res = await request(app.getHttpServer())
+          .post("/api/login")
+          .send({ nickname, password });
 
-  //       const rawCookie = res.headers["set-cookie"][0]; // 쿠키 값 가져오기
-  //       const rawToken = rawCookie.split(";")[0];
-  //       return rawToken.replace("authorization=Bearer%20", "");
-  //     }
+        const rawCookie = res.headers["set-cookie"][0]; // 쿠키 값 가져오기
+        const rawToken = rawCookie.split(";")[0];
+        return rawToken.replace("authorization=Bearer%20", "");
+      }
 
-  //     async function makePostLike(
-  //       token: string,
-  //       title: string,
-  //       content: string
-  //     ) {
-  //       const result = await request(app.getHttpServer())
-  //         .post("/api/post")
-  //         .set("Cookie", token)
-  //         .send({ title, content });
+      async function makePostLike(
+        token: string,
+        title: string,
+        content: string
+      ) {
+        const result = await request(app.getHttpServer())
+          .post("/api/post")
+          .set("Cookie", token)
+          .send({ title, content });
 
-  //       await request(app.getHttpServer())
-  //         .post(`/api/like/${result.body.postId}`)
-  //         .set("Cookie", likeToken);
-  //     }
+        await request(app.getHttpServer())
+          .post(`/api/like/${result.body.postId}`)
+          .set("Cookie", likeToken);
+      }
 
-  //     postToken1 = await makeToken({
-  //       nickname: "kim5",
-  //       password: "pass@1234@word",
-  //     });
-  //     postToken2 = await makeToken({
-  //       nickname: "kim6",
-  //       password: "pass@1234@word",
-  //     });
-  //     postToken3 = await makeToken({
-  //       nickname: "kim7",
-  //       password: "pass@1234@word",
-  //     });
-  //     postToken4 = await makeToken({
-  //       nickname: "kim8",
-  //       password: "pass@1234@word",
-  //     });
-  //     likeToken = await makeToken({
-  //       nickname: "park5",
-  //       password: "pass@5678@word",
-  //     });
+      postToken1 = await makeToken({
+        nickname: "kim5",
+        password: "pass@1234@word",
+      });
+      postToken2 = await makeToken({
+        nickname: "kim6",
+        password: "pass@1234@word",
+      });
+      postToken3 = await makeToken({
+        nickname: "kim7",
+        password: "pass@1234@word",
+      });
+      postToken4 = await makeToken({
+        nickname: "kim8",
+        password: "pass@1234@word",
+      });
+      likeToken = await makeToken({
+        nickname: "park5",
+        password: "pass@5678@word",
+      });
 
-  //     await makePostLike(postToken1, "kim1의 게시글", "내용1");
-  //     await makePostLike(postToken2, "kim2의 게시글", "내용2");
-  //     await makePostLike(postToken3, "kim3의 게시글", "내용3");
-  //     await makePostLike(postToken4, "kim4의 게시글", "내용4");
-  //   });
+      await makePostLike(postToken1, "kim1의 게시글", "내용1");
+      await makePostLike(postToken2, "kim2의 게시글", "내용2");
+      await makePostLike(postToken3, "kim3의 게시글", "내용3");
+      await makePostLike(postToken4, "kim4의 게시글", "내용4");
+    });
 
-  //   test("❌ 좋아요한 게시글 모두 불러오기 - 실패(로그인 안 함)", async () => {
-  //     const res = await request(app.getHttpServer()).get("/api/like");
-  //     expect(res.status).toBe(401);
-  //     expect(res.body.message).toBe("로그인 후 이용 가능한 기능입니다.");
-  //   });
+    test("❌ 좋아요한 게시글 모두 불러오기 - 실패(로그인 안 함)", async () => {
+      const res = await request(app.getHttpServer()).get("/api/like");
+      expect(res.status).toBe(401);
+      expect(res.body.message).toBe("로그인 후 이용 가능한 기능입니다.");
+    });
 
-  //   test("✅ 좋아요한 게시글 모두 불러오기 - 성공", async () => {
-  //     const res = await request(app.getHttpServer())
-  //       .get("/api/like")
-  //       .set("Cookie", likeToken);
-  //     expect(res.status).toBe(200);
-  //     expect(res.body.result.length).toBe(4);
-  //   });
+    test("✅ 좋아요한 게시글 모두 불러오기 - 성공", async () => {
+      const res = await request(app.getHttpServer())
+        .get("/api/like")
+        .set("Cookie", likeToken);
+      expect(res.status).toBe(200);
+      expect(res.body.result.length).toBe(4);
+    });
 
-  //   afterEach(async () => {
-  //     await prisma.users.deleteMany();
-  //     await prisma.posts.deleteMany();
-  //     await prisma.likes.deleteMany();
-  //   });
-  // });
+    afterEach(async () => {
+      await prisma.users.deleteMany();
+      await prisma.posts.deleteMany();
+      await prisma.likes.deleteMany();
+    });
+  });
   afterAll(async () => {
     await app.close();
   });
