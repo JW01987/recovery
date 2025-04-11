@@ -11,6 +11,7 @@ import {
   Res,
   Req,
   UseGuards,
+  ParseIntPipe,
 } from "@nestjs/common";
 import { Response } from "express";
 import { AuthRequest } from "../utils/authRequest";
@@ -19,7 +20,7 @@ import { CommentsService } from "./comments.service";
 import { CommentDto } from "../dto/commentDto";
 import { AuthGuard } from "../middlewares/auth";
 
-@Controller("comments")
+@Controller("api")
 export class CommentsController {
   constructor(private readonly commentService: CommentsService) {}
 
@@ -41,8 +42,8 @@ export class CommentsController {
   @UseGuards(AuthGuard)
   async commentUpdate(
     @Req() req: AuthRequest,
-    @Body() content: string,
-    @Param() commentId: number
+    @Body("content") content: string,
+    @Param("commentId", ParseIntPipe) commentId: number
   ) {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");
@@ -64,8 +65,7 @@ export class CommentsController {
   @UseGuards(AuthGuard)
   async commentDelete(
     @Req() req: AuthRequest,
-    @Res() res: Response,
-    @Param() commentId: number
+    @Param("commentId", ParseIntPipe) commentId: number
   ) {
     try {
       if (req.user == undefined) throw Error("로그인 후 이용해주세요");

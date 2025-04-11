@@ -4,7 +4,7 @@ import request from "supertest";
 import { AppModule } from "../app.module";
 import { PrismaService } from "../prisma/prisma.service";
 
-describe("게시글 API 테스트 (E2E)", () => {
+describe("좋아요 API 테스트 (E2E)", () => {
   jest.setTimeout(10000);
   let app: INestApplication;
   let prisma: PrismaService;

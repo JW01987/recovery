@@ -18,7 +18,7 @@ export class CommentsService {
   }
 
   async commentUpdate({ commentId, content, userId }: CommentUpdateDto) {
-    if (content.trim().length == 0)
+    if (String(content).length == 0)
       throw new HttpException("내용을 입력해주세요", 400);
     const comment: Comments | null = await this.prisma.comments.findUnique({
       where: { id: commentId },
@@ -47,7 +47,7 @@ export class CommentsService {
   }
 
   async commentCreate({ content, postId, userId }: CommentCreateDto) {
-    if (content.trim().length == 0)
+    if (String(content).trim().length == 0)
       throw new HttpException("내용을 입력해주세요", 400);
 
     return await this.prisma.comments.create({
